@@ -11,7 +11,7 @@ const manrope = Manrope({
 export default function Home() {
     return (
         <div className="p-6">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-start">
                 <Image src={"/logo.png"} height={30} width={80} alt="cover" />
                 <PastelButton message="Login" />
             </div>
@@ -57,7 +57,7 @@ export default function Home() {
                 <div className="flex  h-full w-full justify-center">
                     {/* <div className="h-full w-full"> */}
                     <Image
-                        src={"/chat2.png"}
+                        src={"/demo.png"}
                         height={500}
                         width={500}
                         alt="cover"
