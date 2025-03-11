@@ -35,7 +35,7 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <div className="flex h-screen overflow-hidden bg-[#EDFCD1] ">
-                    <div className="w-[5vw] py-8 p-3 flex flex-col items-center space-y-10  text-black border-r-2 border-black">
+                    <div className="w-[5vw] py-8 p-3 flex flex-col items-center space-y-10  text-black  border-black">
                         <Link href="/" passHref>
                             <GoHome className="text-3xl" />
                         </Link>

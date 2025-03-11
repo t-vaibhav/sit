@@ -139,7 +139,7 @@ export default function page() {
                 </div>
 
                 {/* Chat List */}
-                <div className="flex-1 overflow-y-auto scroll">
+                <div className="flex-1 over-y-at scroll">
                     {chatUsersData.map((user, index) => (
                         <ChatUser
                             key={index}
@@ -163,7 +163,7 @@ export default function page() {
                         </div>
                     </div>
                 </div>
-                <div className="flex-grow p-4 overflow-y-auto bg-[url('/bg-print.svg')] bg-gray-50">
+                <div className="flex-grow p-4 overflow-y-auto bg-[url('/bg-print.sv')] bg-gray-50">
                     {messages.map((message) => (
                         <ChatMessage
                             key={message.id}
