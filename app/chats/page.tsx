@@ -112,8 +112,8 @@ const ChatMessage = ({
         <div
             className={`max-w-xs p-2 rounded-lg  ${
                 sender === "self"
-                    ? "bg-[#F75FC7] text-black"
-                    : "bg-[#C0F65E] text-black"
+                    ? "bg-pink-300 text-black border border-black"
+                    : "bg-[#C0F65E] text-black border border-black"
             }`}
         >
             <p>{text}</p>
@@ -124,8 +124,8 @@ const ChatMessage = ({
 
 export default function page() {
     return (
-        <div className="h-screen flex  bg-[#F6FDE8] overflow-hidden">
-            <div className="w-1/4 h-full flex flex-col border-r border-black">
+        <div className="h-screen flex  bg-[#F6FDE8] overflow-hidden ">
+            <div className="w-1/4 h-full flex flex-col border-r border-gray-400">
                 {/* Search Bar */}
                 <div className="sticky top-0 left-0 right-0 bg-[#F6FDE8] z-10">
                     <div className="p-2 border-b border-black h-16 flex items-center justify-between relative">
@@ -139,7 +139,7 @@ export default function page() {
                 </div>
 
                 {/* Chat List */}
-                <div className="flex-1 over-y-at scroll">
+                <div className="flex-1 overflow-y-auto scroll">
                     {chatUsersData.map((user, index) => (
                         <ChatUser
                             key={index}
@@ -151,7 +151,7 @@ export default function page() {
                 </div>
             </div>
 
-            <div className="w-3/4 h-full flex #F6FDE8 flex-col justify-between">
+            <div className="w-3/4 h-full flex bg-[#F6FDE8] flex-col justify-between">
                 <div className="p-2 border-b border-black h-16 flex items-center ">
                     <div className="px-2 flex items-center">
                         <div className="flex space-x-2 items-center">
@@ -163,7 +163,7 @@ export default function page() {
                         </div>
                     </div>
                 </div>
-                <div className="flex-grow p-4 overflow-y-auto bg-[url('/bg-print.sv')] bg-gray-50">
+                <div className="flex-grow p-4 overflow-y-auto bg-[url('/bg-print.svg')] bg-gray-400">
                     {messages.map((message) => (
                         <ChatMessage
                             key={message.id}

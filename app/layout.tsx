@@ -2,13 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { LuContact } from "react-icons/lu";
-import { BsChatSquareDots } from "react-icons/bs";
-import { IoSettingsOutline } from "react-icons/io5";
-import { GoHome } from "react-icons/go";
-import { AiOutlineSend } from "react-icons/ai";
-import Link from "next/link";
-
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -34,8 +27,8 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                <div className="flex h-screen overflow-hidden bg-[#EDFCD1] ">
-                    <div className="w-[5vw] py-8 p-3 flex flex-col items-center space-y-10  text-black  border-black">
+                <div className="flex min-h-screen bg-[#EDFCD1] ">
+                    {/* <div className="w-[5vw] py-8 p-3 flex flex-col items-center space-y-10  text-black  border-black border-r">
                         <Link href="/" passHref>
                             <GoHome className="text-3xl" />
                         </Link>
@@ -51,7 +44,7 @@ export default function RootLayout({
                         <Link href="/" passHref>
                             <IoSettingsOutline className="text-3xl" />
                         </Link>
-                    </div>
+                    </div> */}
                     <div className="w-full h-full">{children}</div>
                 </div>
             </body>

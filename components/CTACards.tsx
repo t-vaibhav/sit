@@ -12,7 +12,7 @@ export default function CTACards({
     content?: string;
 }) {
     return (
-        <div className=" border border-[#00000033] bg-[#FCD1EF] h-full px-10 pt-5 pb-10 relative">
+        <div className=" border border-[#00000033] [#FCD1EF] bg-pink-300 h-full px-10 pt-5 pb-10 relative">
             <div></div>
             <div className="flex justify-between items-center">
                 <div className=" ">

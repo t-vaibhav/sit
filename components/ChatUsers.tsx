@@ -13,7 +13,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
     recentMessage,
 }) => {
     return (
-        <div className="flex items-center justify-between hover:bg-[#C0F65E] text-black p-4 w-full border-b border-b-black hover:text-black cursor-pointer">
+        <div className="flex bg-[F9FAFB] items-center justify-between hover:bg-[#C0F65E] text-black p-4 w-full hover:text-black cursor-pointer">
             <div className="flex items-center space-x-3 w-full overflow-hidden">
                 {/* Profile Icon */}
                 <div className="bg-gray-700 p-2 rounded-full flex-shrink-0">
