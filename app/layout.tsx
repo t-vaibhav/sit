@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Sidebar from "@/components/Sidebar";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -22,29 +23,15 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    // const router = useRouter();
+
     return (
         <html lang="en">
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <div className="flex min-h-screen bg-[#EDFCD1] ">
-                    {/* <div className="w-[5vw] py-8 p-3 flex flex-col items-center space-y-10  text-black  border-black border-r">
-                        <Link href="/" passHref>
-                            <GoHome className="text-3xl" />
-                        </Link>
-                        <Link href="/send" passHref>
-                            <AiOutlineSend className="text-3xl" />
-                        </Link>
-                        <Link href="/chats" passHref>
-                            <BsChatSquareDots className="text-3xl" />
-                        </Link>
-                        <Link href="/contacts" passHref>
-                            <LuContact className="text-3xl" />
-                        </Link>
-                        <Link href="/" passHref>
-                            <IoSettingsOutline className="text-3xl" />
-                        </Link>
-                    </div> */}
+                    {<Sidebar />}
                     <div className="w-full h-full">{children}</div>
                 </div>
             </body>

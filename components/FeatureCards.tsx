@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Heading from "./Heading";
 import Image from "next/image";
@@ -8,10 +9,7 @@ type FeatureCardsProps = {
     content: string;
     src: string;
 };
-const box = {
-    backgroundColor: "",
-    borderRadius: 5,
-};
+
 const FeatureCards: React.FC<FeatureCardsProps> = ({
     message,
     content,
@@ -19,11 +17,17 @@ const FeatureCards: React.FC<FeatureCardsProps> = ({
 }) => {
     return (
         <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+                duration: 1,
+                scale: { type: "spring", duration: 0.4, bounce: 0.5 },
+            }}
+            viewport={{ amount: 0.8 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.8 }}
-            style={box}
         >
-            <div className="border-2 border-black rotate-[2deg] bg-[#FCD1EF] mt-10">
+            <div className="border-2 border-black rotate-[2deg] bg-[#FCD1EF] h-full">
                 <div className="border-2 border-black -rotate-[1deg] h-full bg-[#FCD1EF]">
                     <div className="border-2 border-black -rotate-[1deg] h-full bg-[#FCD1EF] p-8 grid grid-cols-5 gap-5">
                         <div className="col-span-4">
