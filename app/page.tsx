@@ -187,7 +187,7 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div className="h-8 mt-32 bg-[#FCD1EF] border-t-2 border-t-black flex justify-between items-center px-16">
+            <div className="h-8 mt-32 bg-[#F] border-t-2 border-t-black flex justify-between items-center px-16">
                 <div>Designed and Developed by Vaibhav tiwari</div>
                 <div className="flex space-x-5">
                     <BsLinkedin />

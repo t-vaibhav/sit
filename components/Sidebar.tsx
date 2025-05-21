@@ -11,13 +11,16 @@ import { IoSettingsOutline } from "react-icons/io5";
 
 export default function Sidebar() {
     const pathname = usePathname(); // Get current path
-    console.log("Current Path:", pathname);
+    // console.log("Current Path:", pathname);
 
-    if (pathname === "/") return null; // Ensure Sidebar does not appear on "/"
+    // if (pathname === "/") return null; // Ensure Sidebar does not appear on "/"
 
     return (
         <div className="w-[5vw] py-8 p-3 flex flex-col items-center space-y-10 text-black border-black border-r">
             <Link href="/">
+                <GoHome className="text-3xl cursor-pointer" />
+            </Link>
+            <Link href="/home">
                 <GoHome className="text-3xl cursor-pointer" />
             </Link>
             <Link href="/send">

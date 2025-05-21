@@ -35,7 +35,7 @@ export default function StepsCards({
                 />
                 <Heading
                     message={heading}
-                    className="text-start text-2xl mt-0"
+                    className="text-start text-2xl mt-"
                 />
                 <p className="pt-5 text-lg">{content}</p>
             </div>
