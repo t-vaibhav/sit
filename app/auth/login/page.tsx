@@ -54,7 +54,7 @@ export default function page() {
                         <p>
                             Don't have an account?{" "}
                             <Link
-                                href={"auth//register"}
+                                href={"/auth/register"}
                                 className="hover:underline cursor-pointer"
                             >
                                 Register

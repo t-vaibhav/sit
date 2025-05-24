@@ -21,7 +21,7 @@ export default function PastelButton({
                 onClick={onClick} // Now supports click event
                 className={`
                 ${className} 
-                bg-pink-300 h-full w-full cursor-pointer border border-black px-2 py-2 shadow-md relative flex items-center text-base hover:-translate-y-1 hover:-translate-x-1 ease-in-out duration-200
+                bg-pink-300 h-full w-full cursor-pointer border border-black px-5 font-normal py-2 shadow-md relative flex items-center text-base hover:-translate-y-1 hover:-translate-x-1 ease-in-out duration-200
                 ${children ? "justify-center" : "justify-center"}
                 `}
             >

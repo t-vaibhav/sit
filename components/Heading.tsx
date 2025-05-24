@@ -12,10 +12,10 @@ interface HeadingProps {
 }
 export default function Heading({ message, className }: HeadingProps) {
     return (
-        <h1
+        <div
             className={`${radioCanada.variable} ${className} font-semibold      `}
         >
             {message}
-        </h1>
+        </div>
     );
 }
