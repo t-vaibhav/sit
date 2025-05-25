@@ -1,7 +1,7 @@
 // page.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, Loader2, XCircle } from "lucide-react"; // Import Loader2 for spinner, XCircle for error
 import ChatUser from "@/components/ChatUsers";
 import axios from "axios";
 
@@ -16,46 +16,120 @@ interface Message {
 export default function Page() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const [error, setError] = useState<string | null>(null); // Initialize as null for no error
 
-    async function fetchMessages() {
-        try {
-            const response = await axios.get(
-                "http://localhost:5000/api/get-all/",
-                {
-                    withCredentials: true,
+    // async function fetchMessages() {
+    //     setLoading(true); // Ensure loading is true when fetch starts
+    //     setError(null); // Clear any previous errors
+    //     try {
+    //         const response = await axios.get(
+    //             "http://localhost:5000/api/get-all/",
+    //             {
+    //                 withCredentials: true,
+    //             }
+    //         );
+
+    //         console.log("Response from server:", response.data);
+
+    //         if (Array.isArray(response.data.data)) {
+    //             setMessages(response.data.data as Message[]);
+    //         } else {
+    //             console.error(
+    //                 "API response data is not an array:",
+    //                 response.data
+    //             );
+    //             setError("Invalid data format received from the server.");
+    //         }
+    //     } catch (err) {
+    //         console.error("Error fetching messages:", err);
+    //         if (
+    //             axios.isAxiosError(err) &&
+    //             err.response &&
+    //             err.response.status === 500
+    //         ) {
+    //             setError(
+    //                 "Server error (500). Please try again later or contact support."
+    //             );
+    //         } else if (axios.isAxiosError(err) && err.message) {
+    //             setError(`Failed to fetch messages: ${err.message}.`);
+    //         } else {
+    //             setError(
+    //                 "Failed to fetch messages. Please check your connection and try again."
+    //             );
+    //         }
+    //     } finally {
+    //         setLoading(false); // Ensure loading is false after fetch completes (success or failure)
+    //     }
+    // }
+
+    function fetchMessages() {
+        setLoading(true); // Ensure loading is true when fetch starts
+        setError(null); // Clear any previous errors
+        const response = axios
+            .get("http://localhost:5000/api/get-all/", {
+                withCredentials: true,
+            })
+            .then((res) => {
+                console.log("Response from server:", res.data);
+                if (Array.isArray(res.data.data)) {
+                    setMessages(res.data.data as Message[]);
+                } else {
+                    console.error(
+                        "API response data is not an array:",
+                        res.data
+                    );
+                    setError("Invalid data format received from the server.");
                 }
-            );
-
-            console.log("Response from server:", response.data);
-            setMessages(response.data.data as Message[]);
-        } catch (err) {
-            console.error("Error fetching messages:", err);
-            setError("Failed to fetch messages. Please try again later.");
-        } finally {
-            setLoading(false);
-        }
+            })
+            .catch((err) => {
+                console.error("Error fetching messages:", err);
+                if (
+                    axios.isAxiosError(err) &&
+                    err.response &&
+                    err.response.status === 500
+                ) {
+                    setError(
+                        "Server error (500). Please try again later or contact support."
+                    );
+                } else if (axios.isAxiosError(err) && err.message) {
+                    setError(`Failed to fetch messages: ${err.message}.`);
+                } else {
+                    setError(
+                        "Failed to fetch messages. Please check your connection and try again."
+                    );
+                }
+            })
+            .finally(() => {
+                setLoading(false); // Ensure loading is false after fetch completes
+            });
     }
 
     useEffect(() => {
         fetchMessages();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="h-screen flex items-center justify-center bg-[#F6FDE8]">
-                <p>Loading chats...</p>
-            </div>
-        );
-    }
+    // Loader Component for better visual feedback
+    const LoadingSpinner = () => (
+        <div className="flex flex-col items-center justify-center h-full">
+            <Loader2 className="h-12 w-12 animate-spin text-gray-500" />
+            <p className="mt-4 text-lg text-gray-600">Loading chats...</p>
+        </div>
+    );
 
-    if (error) {
-        return (
-            <div className="h-screen flex items-center justify-center bg-[#F6FDE8]">
-                <p className="text-red-600">{error}</p>
-            </div>
-        );
-    }
+    // Error Message Component
+    const ErrorDisplay = ({ message }: { message: string }) => (
+        <div className="flex flex-col items-center justify-center h-full text-red-700">
+            <XCircle className="h-12 w-12 text-red-500" />
+            <p className="mt-4 text-lg font-semibold">Error:</p>
+            <p className="text-center px-4">{message}</p>
+            <button
+                onClick={fetchMessages}
+                className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+                Retry
+            </button>
+        </div>
+    );
 
     return (
         <div className="h-screen flex bg-[#F6FDE8] overflow-hidden">
@@ -74,19 +148,23 @@ export default function Page() {
 
                 {/* Chat List */}
                 <div className="flex-1 overflow-y-auto">
-                    {messages.length > 0 ? (
+                    {loading ? (
+                        <LoadingSpinner />
+                    ) : error ? (
+                        <ErrorDisplay message={error} />
+                    ) : messages.length > 0 ? (
                         messages.map((user) => {
-                            // Convert the ISO date string to a Date object, then format it.
                             const date = new Date(user.createdAt);
-                            const formattedTime = date.toLocaleDateString([], {
+                            const formattedTime = date.toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit",
-                            }); // e.g., "10:45 AM"
+                                hour12: true,
+                            });
 
                             return (
                                 <ChatUser
                                     key={user._id || user.number}
-                                    timeSent={formattedTime} // Pass the formatted string
+                                    timeSent={formattedTime}
                                     number={user.number}
                                     recentMessage={user.message}
                                     files={user.files || []}
