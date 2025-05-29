@@ -206,13 +206,21 @@
     }
 }
 
+html {
+    background-color: #edfcd1;
+}
+
 .phone-input-container {
+    border: 2px;
+    border-color: black;
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
 .phone-label {
+    border: 2px;
+    border-color: black;
     font-size: 14px;
     color: #d32f2f;
     font-weight: 500;
@@ -236,3 +244,11 @@
     color: #d32f2f;
     margin-top: 2px;
 }
+
+.react-international-phone-country-selector-button {
+    /* border: 2px ; */
+    /* border-color: black !important; */
+}
+/* .react-international-phone-input-container {
+    height: 40px;
+} */

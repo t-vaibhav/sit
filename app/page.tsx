@@ -9,11 +9,12 @@ import Steps from "@/components/Steps";
 // import ChatUI from "@/components/ChatUI";
 import ScrollTriggered from "./demo/page";
 import { BsLinkedin, BsTwitterX } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { div } from "motion/react-client";
 import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 const manrope = Manrope({
     subsets: ["latin"],
     variable: "--font-manrope",
@@ -57,7 +58,32 @@ const features = [
         src: "/hassle.png",
     },
 ];
+function LoadingSpinner() {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-[#EDFCD1]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+        </div>
+    );
+}
 export default function Home() {
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+        const checkAuth = () => {
+            const authCookie = Cookies.get("is_auth");
+            const authenticated = authCookie === "true";
+
+            if (authenticated) {
+                router.push("/app/home");
+            }
+            setIsLoading(false);
+        };
+
+        checkAuth();
+    }, []);
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
     return (
         <div>
             {/* <Sidebar /> */}

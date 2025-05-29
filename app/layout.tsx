@@ -30,10 +30,8 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#EDFCD1]`}
             >
-                <ClientLayout>
-                    <EdgeStoreProvider>{children}</EdgeStoreProvider>
-                    <Toaster />
-                </ClientLayout>
+                <EdgeStoreProvider>{children}</EdgeStoreProvider>
+                <Toaster />
             </body>
         </html>
     );

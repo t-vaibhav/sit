@@ -18,50 +18,6 @@ export default function Page() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // Initialize as null for no error
 
-    // async function fetchMessages() {
-    //     setLoading(true); // Ensure loading is true when fetch starts
-    //     setError(null); // Clear any previous errors
-    //     try {
-    //         const response = await axios.get(
-    //             "http://localhost:5000/api/get-all/",
-    //             {
-    //                 withCredentials: true,
-    //             }
-    //         );
-
-    //         console.log("Response from server:", response.data);
-
-    //         if (Array.isArray(response.data.data)) {
-    //             setMessages(response.data.data as Message[]);
-    //         } else {
-    //             console.error(
-    //                 "API response data is not an array:",
-    //                 response.data
-    //             );
-    //             setError("Invalid data format received from the server.");
-    //         }
-    //     } catch (err) {
-    //         console.error("Error fetching messages:", err);
-    //         if (
-    //             axios.isAxiosError(err) &&
-    //             err.response &&
-    //             err.response.status === 500
-    //         ) {
-    //             setError(
-    //                 "Server error (500). Please try again later or contact support."
-    //             );
-    //         } else if (axios.isAxiosError(err) && err.message) {
-    //             setError(`Failed to fetch messages: ${err.message}.`);
-    //         } else {
-    //             setError(
-    //                 "Failed to fetch messages. Please check your connection and try again."
-    //             );
-    //         }
-    //     } finally {
-    //         setLoading(false); // Ensure loading is false after fetch completes (success or failure)
-    //     }
-    // }
-
     function fetchMessages() {
         setLoading(true); // Ensure loading is true when fetch starts
         setError(null); // Clear any previous errors

@@ -4,7 +4,7 @@ import { Manrope } from "next/font/google";
 import PastelButton from "@/components/PastelButton";
 import Heading from "@/components/Heading";
 import Image from "next/image";
-import { Edit2Icon, PlusCircle, X } from "lucide-react";
+import { Edit2Icon, Loader2, PlusCircle, X, XCircle } from "lucide-react";
 import { BsTrash } from "react-icons/bs";
 import { MdOutlineEdit } from "react-icons/md";
 import Link from "next/link";
@@ -35,6 +35,9 @@ import {
 import { toast } from "sonner";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
+import { div } from "motion/react-client";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 const manrope = Manrope({
     subsets: ["latin"],
@@ -71,20 +74,22 @@ const Favourite = ({ name, number, id, onDelete, onEdit }: any) => {
 
     return (
         <div className="flex justify-between gap-5 bg-pink-200 px-5 p-3 border border-black">
-            <div className="flex gap-5">
-                <Image
-                    src={"/user.png"}
-                    height={50}
-                    width={50}
-                    alt={name}
-                    className="rounded-full border border-black"
-                />
-                <div>
-                    <h3 className="font-medium text-xl pb-1">{name}</h3>
-                    <h6 className={`font-normal text-base`}>{number}</h6>
+            <Link href={`/app/send/?number=${number}`} className="flex-1">
+                <div className="flex-1 flex gap-5">
+                    <Image
+                        src={"/user.png"}
+                        height={50}
+                        width={50}
+                        alt={name}
+                        className="rounded-full border border-black"
+                    />
+                    <div>
+                        <h3 className="font-medium text-xl pb-1">{name}</h3>
+                        <h6 className={`font-normal text-base`}>{number}</h6>
+                    </div>
                 </div>
-            </div>
-            <div className="flex gap-5 items-center">
+            </Link>
+            <div className="flex gap-5 items-center ">
                 <Dialog open={editOpen} onOpenChange={setEditOpen}>
                     <DialogTrigger asChild>
                         <MdOutlineEdit className="scale-110 hover:scale-150 transition-all duration-200 ease-in-out cursor-pointer" />
@@ -134,11 +139,25 @@ const Favourite = ({ name, number, id, onDelete, onEdit }: any) => {
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormControl>
-                                                        <Input
-                                                            type="string"
-                                                            className="w-full bg-white focus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none"
-                                                            placeholder="Enter Phone Number"
-                                                            {...field}
+                                                        <PhoneInput
+                                                            defaultCountry="in"
+                                                            value={field.value}
+                                                            onChange={
+                                                                field.onChange
+                                                            }
+                                                            inputProps={{
+                                                                className: `w-full p-1 text-lg outline-none border bg-white`,
+                                                                placeholder:
+                                                                    "Enter your phone number",
+                                                            }}
+                                                            countrySelectorStyleProps={{
+                                                                className: ` pl-0 pr-1 py-1 `,
+                                                            }}
+                                                            dialCodePreviewStyleProps={{
+                                                                className: `text-lg p-1 bg-white `,
+                                                            }}
+                                                            className="flex w-full items-center"
+                                                            inputClassName="w-full text-lg outline-none border-2 bg-white"
                                                             disabled
                                                         />
                                                     </FormControl>
@@ -171,20 +190,30 @@ const Favourite = ({ name, number, id, onDelete, onEdit }: any) => {
 export default function Home() {
     const [favourites, setFavourites] = useState([]);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const fetchFavourites = async () => {
-        try {
-            const response = await axios.get(
-                "http://localhost:5000/api/favourites/",
-                {
-                    withCredentials: true,
-                }
-            );
-            setFavourites(response.data.data.users);
-        } catch (error) {
-            console.error("Error fetching favourites:", error);
-            toast.error("Failed to fetch favourites. Please try again.");
-        }
+    const fetchFavourites = () => {
+        setLoading(true); // Ensure loading is true when fetch starts
+        setError(null); // Clear any previous errors
+        const response = axios
+            .get("http://localhost:5000/api/favourites/", {
+                withCredentials: true,
+            })
+            .then((response) => {
+                setFavourites(response.data.data.users);
+            })
+            .catch((error) => {
+                console.error("Error fetching favourites:", error);
+                setError(
+                    error.response?.data?.message ||
+                        "Failed to fetch favourites. Please try again."
+                );
+                toast.error("Failed to fetch favourites. Please try again.");
+            })
+            .finally(() => {
+                setLoading(false); // Ensure loading is false after fetch completes
+            });
     };
 
     const deleteFavourites = async (number: string) => {
@@ -271,6 +300,26 @@ export default function Home() {
         }
     };
 
+    const LoadingSpinner = () => (
+        <div className="flex flex-col items-center justify-center h-full">
+            <Loader2 className="h-12 w-12 animate-spin text-gray-500" />
+            <p className="mt-4 text-lg text-gray-600">Loading chats...</p>
+        </div>
+    );
+    const ErrorDisplay = ({ message }: { message: string }) => (
+        <div className="flex flex-col items-center justify-center h-full text-red-700">
+            <XCircle className="h-12 w-12 text-red-500" />
+            <p className="mt-4 text-lg font-semibold">Error:</p>
+            <p className="text-center px-4">{message}</p>
+            <button
+                onClick={fetchFavourites}
+                className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+                Retry
+            </button>
+        </div>
+    );
+
     useEffect(() => {
         fetchFavourites();
     }, []);
@@ -336,7 +385,11 @@ export default function Home() {
                     className="text-4xl pb-8 space-y-5"
                 />
                 <div className="space-y-5">
-                    {favourites.length > 0 ? (
+                    {loading ? (
+                        <LoadingSpinner />
+                    ) : error ? (
+                        <ErrorDisplay message={error} />
+                    ) : favourites.length > 0 ? (
                         favourites.map((fav: any) => (
                             <Favourite
                                 key={fav._id}
@@ -401,11 +454,27 @@ export default function Home() {
                                                     render={({ field }) => (
                                                         <FormItem>
                                                             <FormControl>
-                                                                <Input
-                                                                    type="string"
-                                                                    className="w-full bg-white focus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none"
-                                                                    placeholder="Enter Phone Number"
-                                                                    {...field}
+                                                                <PhoneInput
+                                                                    defaultCountry="in"
+                                                                    value={
+                                                                        field.value
+                                                                    }
+                                                                    onChange={
+                                                                        field.onChange
+                                                                    }
+                                                                    inputProps={{
+                                                                        className: `w-full p-1 text-lg outline-none border bg-white`,
+                                                                        placeholder:
+                                                                            "Enter your phone number",
+                                                                    }}
+                                                                    countrySelectorStyleProps={{
+                                                                        className: ` pl-0 pr-1 py-1 `,
+                                                                    }}
+                                                                    dialCodePreviewStyleProps={{
+                                                                        className: `text-lg p-1 bg-white `,
+                                                                    }}
+                                                                    className="flex w-full items-center"
+                                                                    inputClassName="w-full text-lg outline-none border-2 bg-white"
                                                                 />
                                                             </FormControl>
                                                             <FormMessage />

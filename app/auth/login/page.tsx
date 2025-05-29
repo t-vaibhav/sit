@@ -1,65 +1,175 @@
+"use client";
 import Heading from "@/components/Heading";
-import PastelButton from "@/components/PastelButton";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React from "react";
-import { BsGithub, BsGoogle } from "react-icons/bs";
+import React, { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-export default function page() {
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+} from "@/components/ui/form";
+
+import { toast } from "sonner"; // Import toast from sonner
+import PastelButton from "@/components/PastelButton";
+
+// OPTION 1: Set withCredentials globally for all axios requests
+// This is often done in a separate file, like a utility or an entry point like layout.tsx or _app.tsx
+// if you want it to apply to all axios calls in your application.
+// import axios from "axios";
+// axios.defaults.withCredentials = true;
+
+const formSchema = z.object({
+    email: z.string().email({ message: "Invalid email address." }),
+    password: z
+        .string()
+        .min(4, { message: "Password must be at least 4 characters." })
+        .max(50, { message: "Password must not exceed 50 characters." }),
+});
+
+export default function LoginPage() {
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+    });
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
+
+        try {
+            // OPTION 2: Set withCredentials directly on the axios.post call (recommended for this specific use case if not setting globally)
+            const loginPromise = axios.post(
+                "http://localhost:5000/api/user/login", // Your login API endpoint
+                {
+                    email: values.email,
+                    password: values.password,
+                },
+                {
+                    withCredentials: true, // <--- Add this line here
+                }
+            );
+
+            toast.promise(loginPromise, {
+                loading: "Logging in...",
+                success: (response) => {
+                    console.log("Login successful:", response.data);
+                    // If your backend sets a cookie (e.g., JWT in an HttpOnly cookie),
+                    // the browser will automatically handle it due to `withCredentials: true`.
+                    // You typically don't access the cookie directly on the frontend.
+                    // You might get user details from response.data if your API returns them.
+
+                    setTimeout(() => {
+                        router.push("/app/home"); // Redirect to dashboard or home page after login
+                    }, 1000);
+
+                    return "Login successful!";
+                },
+                error: (err) => {
+                    console.error("Login failed:", err);
+                    // Check if err.response exists before accessing its properties
+                    return (
+                        err.response?.data?.message ||
+                        "Login failed. Please check your credentials."
+                    );
+                },
+            });
+        } catch (err) {
+            console.error("Unexpected error during login process setup:", err);
+            toast.error("An unexpected error occurred. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
-        <div className="p-10 flex items-center justify-center">
-            <div className=" w-[30vw] bg-pink-200 p-10 h-full border-2 border-black shadow-2xl">
+        <div className="p-10 flex items-center justify-center min-h-screen">
+            <div className="w-[30vw] bg-pink-200 py-20 px-10 h-full border-2 border-black shadow-2xl">
                 <Heading
                     message="Login"
-                    className="text-4xl font-extrabold text-center py-5"
+                    className="text-4xl font-extrabold text-center pb-3"
                 />
                 <p className="text-lg text-center mb-8">
-                    Access you account to get started!
+                    Welcome back! Please log in to your account.
                 </p>
-                <div className="space-y-5 text-base w-full mb-10">
-                    <input
-                        className="w-full bg-white   focus:outline-none shadow-none border-2 border-black p-2 rounded-none"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Email"
-                    />
-                    <input
-                        className="w-full bg-white focus:outline-none shadow-none border-2 border-black p-2 rounded-none"
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Password"
-                    />
-                    <PastelButton
-                        message="Login"
-                        className="w-full text-center bg-white border-2"
-                        wfull
-                    />
-                </div>
-                <div className="space-y-5">
-                    <div className="h-full bg-white w-full cursor-pointer border-2 border-black px-4 py-2  flex items-center text-base justify-center space-x-2 ">
-                        <BsGoogle />
-                        <p>Login with Google</p>
-                    </div>
+                <div className="pt-3">
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-5 text-xl"
+                        >
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                placeholder="Email"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                    <div className="h-full w-full bg-white cursor-pointer border-2 border-black px-4 py-2  flex items-center text-base justify-center space-x-2">
-                        <BsGithub />
-                        <p>Login with Github</p>
-                    </div>
-                    <div className="text-center space-y-3">
-                        <p className="hover:underline cursor-pointer">
-                            Forgot your Password?
-                        </p>
-                        <p>
-                            Don't have an account?{" "}
-                            <Link
-                                href={"/auth/register"}
-                                className="hover:underline cursor-pointer"
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                placeholder="Password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <PastelButton
+                                type="submit"
+                                message=""
+                                className=" w-full text-center bg-white border-2 h-10"
+                                wfull
+                                disabled={loading}
                             >
-                                Register
-                            </Link>
-                        </p>
+                                {loading ? "Submitting..." : "Submit"}{" "}
+                            </PastelButton>
+                            {/* Added loading text */}
+                        </form>
+                    </Form>
+                    <div className="space-y-5 mt-5">
+                        <div className="text-center space-y-3">
+                            <p>
+                                Don't have an account?{" "}
+                                <Link
+                                    href={"/auth/register"}
+                                    className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                                >
+                                    Register
+                                </Link>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

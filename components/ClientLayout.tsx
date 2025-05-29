@@ -1,28 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function ClientLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const currentPath = usePathname();
 
-    const isAuthRoute =
-        currentPath === "/auth/login" ||
-        currentPath === "/auth/register" ||
-        currentPath === "/" ||
-        currentPath === "/auth/register/test";
+    useEffect(() => {
+        const isAuth = Cookies.get("isAuth");
+        setIsLoggedIn(isAuth === "true");
+    }, []);
 
     console.log("Current Path:", currentPath);
+    console.log("Is Logged In:", isLoggedIn);
 
     return (
-        <div className={`min-h-screen ${isAuthRoute ? "" : "flex"}`}>
-            {!isAuthRoute && <Sidebar />}
+        <div className={`min-h-screen`}>
             <div className="flex-1">{children}</div>
         </div>
     );

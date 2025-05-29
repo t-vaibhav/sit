@@ -1,71 +1,132 @@
 "use client";
 import Heading from "@/components/Heading";
-import PastelButton from "@/components/PastelButton";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState } from "react";
-import { BsGithub, BsGoogle } from "react-icons/bs";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+} from "@/components/ui/form";
+
+import { toast } from "sonner"; // Import toast from sonner
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+import PastelButton from "@/components/PastelButton";
+
+const formSchema = z
+    .object({
+        name: z
+            .string()
+            .min(2, { message: "Name must be at least 2 characters." })
+            .max(50, { message: "Name must not exceed 50 characters." }),
+        email: z.string().email({ message: "Invalid email address." }),
+        password: z
+            .string()
+            .min(4, { message: "Password must be at least 4 characters." })
+            .max(50, { message: "Password must not exceed 50 characters." }),
+        confirmPassword: z
+            .string()
+            .min(4, {
+                message: "Confirm password must be at least 4 characters.",
+            })
+            .max(50, {
+                message: "Confirm password must not exceed 50 characters.",
+            }),
+        phoneNumber: z
+            .string()
+            .min(10, { message: "Phone number must be at least 10 digits." })
+            .max(15, { message: "Phone number must not exceed 15 digits." }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords don't match",
+        path: ["confirmPassword"],
+    });
+
 export default function RegisterPage() {
     const router = useRouter();
-    const [formData, setFormData] = useState({
-        fullName: "",
-        email: "",
-        phoneNumber: "",
-        password: "",
-        confirmPassword: "",
-    });
-    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            phoneNumber: "",
+            password: "",
+            confirmPassword: "",
+        },
+    });
 
-    const handleSubmit = async (e?: React.FormEvent) => {
-        if (e) {
-            e.preventDefault();
-        }
-        setError("");
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
 
-        if (formData.password !== formData.confirmPassword) {
-            setError("Passwords do not match");
-            setLoading(false);
-            return;
-        }
-
         try {
-            const response = await axios.post(
+            const registrationPromise = axios.post(
                 "http://localhost:5000/api/user/register",
                 {
-                    name: formData.fullName,
-                    email: formData.email,
-                    phone: formData.phoneNumber,
-                    password: formData.password,
-                    password_confirmation: formData.password,
+                    name: values.name,
+                    email: values.email,
+                    phone: values.phoneNumber,
+                    password: values.password,
+                    password_confirmation: values.confirmPassword,
                 }
             );
 
-            if (response.data) {
-                // Registration successful
-                router.push("/auth/login");
-            }
-        } catch (err: any) {
-            setError(
-                err.response?.data?.message ||
-                    "Registration failed. Please try again."
+            // Use toast.promise directly. The await inside the try block for
+            // registrationPromise is no longer needed after this, as sonner
+            // handles the promise resolution/rejection internally for its states.
+            toast.promise(registrationPromise, {
+                // Await the toast.promise call itself
+                loading: "Creating your account...",
+                success: (response) => {
+                    // 'response' here is the resolved value from axios.post
+                    // Navigate after the toast shows, or immediately after success if you prefer
+                    setTimeout(() => {
+                        router.push("/auth/verify-email");
+                    }, 1000); // Give the toast a moment to be visible
+
+                    return "Registration successful!";
+                },
+                error: (err) => {
+                    // Log the full error to the console for debugging
+                    console.error("Registration failed:", err);
+                    return (
+                        err.response?.data?.message ||
+                        "Registration failed. Please try again."
+                    );
+                },
+            });
+
+            // No need for a separate await registrationPromise; here because toast.promise
+            // already handles the promise resolution and updates its state.
+            // If you *must* access the resolved data here for further logic,
+            // you'd typically await registrationPromise *before* toast.promise,
+            // or handle it within the success callback.
+            // For now, removing it simplifies the flow with sonner.
+        } catch (err) {
+            // This catch block will only execute for errors that occur *before*
+            // the promise is even initiated or if `toast.promise` itself throws
+            // an unexpected synchronous error (very rare).
+            // Axios errors are handled by sonner's error callback.
+            console.error(
+                "Unexpected error during registration process setup:",
+                err
             );
+            toast.error("An unexpected error occurred. Please try again.");
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     return (
         <div className="p-10 flex items-center justify-center">
@@ -77,83 +138,124 @@ export default function RegisterPage() {
                 <p className="text-lg text-center mb-8">
                     Enter your details to get started
                 </p>
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        {error}
-                    </div>
-                )}
-                <form
-                    onSubmit={handleSubmit}
-                    className="space-y-5 text-base w-full mb-10"
-                >
-                    <input
-                        className="w-full bg-white focus:outline-none shadow-none border-2 border-black p-2 rounded-none"
-                        type="text"
-                        name="fullName"
-                        value={formData.fullName}
-                        onChange={handleChange}
-                        placeholder="Full Name"
-                        required
-                    />
-                    <input
-                        className="w-full bg-white focus:outline-none shadow-none border-2 border-black p-2 rounded-none"
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Email"
-                        required
-                    />
-                    <input
-                        className="w-full bg-white focus:outline-none shadow-none border-2 border-black p-2 rounded-none"
-                        type="tel"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        placeholder="Phone Number"
-                        required
-                    />
-                    <input
-                        className="w-full bg-white focus:outline-none shadow-none border-2 border-black p-2 rounded-none"
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Password"
-                        required
-                    />
-                    <input
-                        className="w-full bg-white focus:outline-none shadow-none border-2 border-black p-2 rounded-none"
-                        type="password"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        placeholder="Confirm Password"
-                        required
-                    />
-                    <PastelButton
-                        message={loading ? "Registering..." : "Register"}
-                        className="w-full text-center bg-white border-2"
-                        wfull
-                        onClick={handleSubmit}
-                    />
-                </form>
-                <div className="space-y-5">
-                    {/* <div className="h-full bg-white w-full cursor-pointer border-2 border-black px-4 py-2  flex items-center text-base justify-center space-x-2 ">
-                        <BsGoogle />
-                        <p>Continue with Google</p>
-                    </div> */}
-
-                    {/* <div className="h-full w-full bg-white cursor-pointer border-2 border-black px-4 py-2  flex items-center text-base justify-center space-x-2">
-                        <BsGithub />
-                        <p>Login with Github</p>
-                    </div> */}
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-5"
+                    >
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                            placeholder="Enter your Full Name"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                            placeholder="Email"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="phoneNumber"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <PhoneInput
+                                            defaultCountry="in"
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            inputProps={{
+                                                className: `w-full p-1 text-lg outline-none border-black border-2 bg-white`,
+                                                placeholder:
+                                                    "Enter your phone number",
+                                            }}
+                                            countrySelectorStyleProps={{
+                                                className: ` pl-0 pr-1 py-1  `,
+                                            }}
+                                            dialCodePreviewStyleProps={{
+                                                className: `text-lg p-1 bg-white `,
+                                            }}
+                                            className="flex w-full items-center "
+                                            inputClassName="border-2 border-black w-full text-lg outline-none border-2 bg-white "
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                            placeholder="Password"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                            placeholder="Confirm Password"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <PastelButton
+                            type="submit"
+                            message=""
+                            className=" w-full text-center bg-white border-2 h-10"
+                            wfull
+                            disabled={loading}
+                        >
+                            {loading ? "Registering..." : "Submit"}
+                        </PastelButton>
+                    </form>
+                </Form>
+                <div className="space-y-5 mt-5">
                     <div className="text-center space-y-3">
                         <p>
                             Already have an account?{" "}
                             <Link
                                 href={"/auth/login"}
-                                className="hover:underline cursor-pointer"
+                                className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
                             >
                                 Login
                             </Link>

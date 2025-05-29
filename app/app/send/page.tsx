@@ -22,6 +22,7 @@ import {
 import { toast } from "sonner"; // For notifications
 import { useEdgeStore } from "@/lib/edgeStore";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 
 // Define your Zod schema
 const formSchema = z.object({
@@ -43,12 +44,15 @@ export default function PhoneNumberInput() {
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const searchParams = useSearchParams();
+
+    const number = searchParams.get("number");
 
     // Initialize react-hook-form with Zod resolver
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            phoneNumber: "",
+            phoneNumber: number || "",
             message: "",
         },
     });
@@ -179,7 +183,7 @@ export default function PhoneNumberInput() {
         console.log("Form values:", values);
         console.log("here");
         console.log("Attached files (Edge Store URLs):", uploadedFiles);
-
+        
         // Prepare data to send to your MENN backend
         const payload = {
             number: values.phoneNumber.substring(1),

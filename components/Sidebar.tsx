@@ -16,20 +16,20 @@ export default function Sidebar() {
     // if (pathname === "/") return null; // Ensure Sidebar does not appear on "/"
 
     return (
-        <div className="w-[5vw] py-8 p-3 flex flex-col items-center space-y-10 text-black border-black border-r">
-            <Link href="/home">
+        <div className="w-16 py-8 p-3 flex flex-col items-center space-y-10 text-black border-black border-r">
+            <Link href="/app/home">
                 <GoHome className="text-3xl cursor-pointer" />
             </Link>
-            <Link href="/send">
+            <Link href="/app/send">
                 <AiOutlineSend className="text-3xl cursor-pointer" />
             </Link>
-            <Link href="/chats">
+            <Link href="/app/chats">
                 <BiHistory className="text-3xl cursor-pointer" />
             </Link>
-            <Link href="/favourites">
+            <Link href="/app/favourites">
                 <LuHeart className="text-3xl cursor-pointer" />
             </Link>
-            <Link href="/settings">
+            <Link href="/app/settings">
                 <IoSettingsOutline className="text-3xl cursor-pointer" />
             </Link>
         </div>
