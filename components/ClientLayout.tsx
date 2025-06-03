@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
 import Cookies from "js-cookie";
 

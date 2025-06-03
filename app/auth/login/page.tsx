@@ -5,11 +5,10 @@ import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
+import { motion } from "motion/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -20,6 +19,7 @@ import {
 
 import { toast } from "sonner"; // Import toast from sonner
 import PastelButton from "@/components/PastelButton";
+import Image from "next/image";
 
 // OPTION 1: Set withCredentials globally for all axios requests
 // This is often done in a separate file, like a utility or an entry point like layout.tsx or _app.tsx
@@ -96,82 +96,118 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="p-10 flex items-center justify-center min-h-screen">
-            <div className="w-[30vw] bg-pink-200 py-20 px-10 h-full border-2 border-black shadow-2xl">
-                <Heading
-                    message="Login"
-                    className="text-4xl font-extrabold text-center pb-3"
-                />
-                <p className="text-lg text-center mb-8">
-                    Welcome back! Please log in to your account.
-                </p>
-                <div className="pt-3">
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-5 text-xl"
-                        >
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                                placeholder="Email"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                type="password"
-                                                className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                                placeholder="Password"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <PastelButton
-                                type="submit"
-                                message=""
-                                className=" w-full text-center bg-white border-2 h-10"
-                                wfull
-                                disabled={loading}
+        <div className="p-10 flex items-center min-h-screen overflow-hidden">
+            <div className="flex justify-around gap-10 w-full">
+                <motion.div
+                    initial={{
+                        transform: "translateX(-300px)",
+                        opacity: 0,
+                        scale: 0,
+                    }}
+                    animate={{
+                        transform: "translateX(0px)",
+                        opacity: 1,
+                        scale: 1,
+                    }}
+                    transition={{ type: "spring" }}
+                    className="w-[30vw] bg-[#CCFFE6] py-20 px-10 h-full border-2 border-black shadow-2xl"
+                >
+                    <Heading
+                        message="Login"
+                        className="text-4xl font-extrabold text-center pb-3"
+                    />
+                    <p className="text-lg text-center mb-8">
+                        Welcome back! Please log in to your account.
+                    </p>
+                    <div className="pt-3">
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-5 text-xl"
                             >
-                                {loading ? "Submitting..." : "Submit"}{" "}
-                            </PastelButton>
-                            {/* Added loading text */}
-                        </form>
-                    </Form>
-                    <div className="space-y-5 mt-5">
-                        <div className="text-center space-y-3">
-                            <p>
-                                Don't have an account?{" "}
-                                <Link
-                                    href={"/auth/register"}
-                                    className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                    placeholder="Email"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                    placeholder="Password"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <PastelButton
+                                    type="submit"
+                                    message=""
+                                    className=" w-full text-center bg-white border-2 h-10"
+                                    wfull
+                                    disabled={loading}
                                 >
-                                    Register
-                                </Link>
-                            </p>
+                                    {loading ? "Submitting..." : "Submit"}{" "}
+                                </PastelButton>
+                                {/* Added loading text */}
+                            </form>
+                        </Form>
+                        <div className="space-y-5 mt-5">
+                            <div className="text-center space-y-3">
+                                <p>
+                                    Don&apos;t have an account?
+                                    <Link
+                                        href={"/auth/register"}
+                                        className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                                    >
+                                        Register
+                                    </Link>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
+
+                <motion.div
+                    initial={{
+                        transform: "translateX(300px)",
+                        opacity: 0,
+                        scale: 0,
+                    }}
+                    animate={{
+                        transform: "translateX(0px)",
+                        opacity: 1,
+                        scale: 1,
+                    }}
+                    transition={{ type: "spring" }}
+                >
+                    <Image
+                        src={"/login.png"}
+                        height={500}
+                        width={500}
+                        alt="login"
+                    />
+                </motion.div>
             </div>
         </div>
     );

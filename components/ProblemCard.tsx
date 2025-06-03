@@ -23,7 +23,7 @@ const ProblemCard = ({
     return (
         <motion.div
             variants={variants}
-            className={`grid grid-cols-5 gap-5 bg-[#FCD1EF] p-10 border-2 border-black w-full relative shadow-lg ${className}`}
+            className={`grid grid-cols-5 gap-5 bg-[#FFFFCC] p-10 border-2 border-black w-full relative shadow-lg ${className}`}
         >
             <div className="col-span-3">
                 <Heading

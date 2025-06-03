@@ -42,13 +42,28 @@ const PSCards: React.FC<PSCardsProps> = ({
         <div ref={container} className={styles.cardContainer}>
             <motion.div
                 style={{
-                    backgroundColor: "#FCD1EF",
+                    backgroundColor: "#CCFFE6",
                     scale,
                     top: `calc(0vh + ${i * 25}px)`,
                 }}
-                className={`grid grid-cols-5 gap-5 bg-[#FCD1EF] p-10 border-2 border-black w-full relative shadow-lg ${className}`}
+                className={`grid grid-cols-5 gap-5 bg-[#CCFFE6] p-10 border-2 border-black w-full relative shadow-lg ${className}`}
             >
-                <div className="col-span-3">
+                <motion.div
+                    initial={{
+                        y: 0,
+                        opacity: 0,
+                        scaleY: 0,
+                    }}
+                    whileInView={{
+                        y: 0,
+                        opacity: 1,
+                        scaleY: 1,
+                    }}
+                    transition={{
+                        duration: 0.3,
+                    }}
+                    className="col-span-3"
+                >
                     <Heading
                         message={heading}
                         className="text-3xl pb-2 text-start"
@@ -58,7 +73,7 @@ const PSCards: React.FC<PSCardsProps> = ({
                             <p key={index}>{point}</p>
                         ))}
                     </div>
-                </div>
+                </motion.div>
                 <div className="col-span-2 flex justify-center items-center">
                     <div className={styles.imageContainer}>
                         <motion.div

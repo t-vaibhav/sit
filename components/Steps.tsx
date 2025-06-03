@@ -74,7 +74,7 @@ export default function Steps() {
             </section>
             <motion.div
                 style={{ scaleX: scrollYProgress, opacity }}
-                className="fixed left-0 right-0 bottom-4 h-[5px] bg-[#C0F65E] origin-left"
+                className="fixed left-0 right-0 bottom-4 h-[5px] bg-[#FFFFCC] origin-left"
             />
         </article>
     );

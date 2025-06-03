@@ -16,7 +16,7 @@ export default function CTACards({
 }) {
     return (
         <Link href={link}>
-            <div className=" border border-[#00000033] bg-[#C0F65E] h-full px-10 pt-5 pb-10 relative">
+            <div className=" border border-[#00000033] bg-[#FFCCE6] h-full px-10 pt-5 pb-10 relative">
                 <div></div>
                 <div className="flex justify-between items-center">
                     <div className=" ">

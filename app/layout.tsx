@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "@/components/ClientLayout";
 import { Toaster } from "@/components/ui/sonner";
 import { EdgeStoreProvider } from "@/lib/edgeStore";
 
@@ -28,10 +27,39 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#EDFCD1]`}
+                className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#FFFFCC]`}
             >
                 <EdgeStoreProvider>{children}</EdgeStoreProvider>
-                <Toaster />
+                <Toaster
+                    className=""
+                    position="bottom-right" // Or your preferred position
+                    toastOptions={{
+                        classNames: {
+                            // Apply these classes to the main toast element
+                            toast: "toast-class rounded-none border-2 border-black bg-white text-gray-900 shadow-lg", // <-- Modified here
+                            title: "text-lg font-semibold text-blue-600",
+                            description: "text-sm text-gray-600",
+                            actionButton:
+                                "bg-blue-500 text-white hover:bg-blue-600",
+                            cancelButton:
+                                "bg-red-500 text-white hover:bg-red-600",
+                            error: "bg-red-50 text-red-700 border-red-300",
+                            success:
+                                "bg-green-50 text-green-700 border-green-300",
+                            info: "bg-blue-50 text-blue-700 border-blue-300",
+                            warning:
+                                "bg-orange-50 text-orange-700 border-orange-300",
+                        },
+                    }}
+                    icons={{
+                        success: <span className="text-green-500">✔</span>,
+                        error: <span className="text-red-500">✘</span>,
+                        warning: <span>warning</span>,
+                        loading: <span>loading</span>,
+                    }}
+                    // richColors
+                    // theme="light" // or "dark" or "system"
+                />
             </body>
         </html>
     );

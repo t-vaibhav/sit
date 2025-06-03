@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -17,11 +16,12 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-
+import { motion } from "motion/react";
 import { toast } from "sonner"; // Import toast from sonner
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import PastelButton from "@/components/PastelButton";
+import Image from "next/image";
 
 const formSchema = z
     .object({
@@ -88,7 +88,7 @@ export default function RegisterPage() {
             toast.promise(registrationPromise, {
                 // Await the toast.promise call itself
                 loading: "Creating your account...",
-                success: (response) => {
+                success: () => {
                     // 'response' here is the resolved value from axios.post
                     // Navigate after the toast shows, or immediately after success if you prefer
                     setTimeout(() => {
@@ -129,139 +129,174 @@ export default function RegisterPage() {
     }
 
     return (
-        <div className="p-10 flex items-center justify-center">
-            <div className="w-[30vw] bg-pink-200 p-10 h-full border-2 border-black shadow-2xl">
-                <Heading
-                    message="Register"
-                    className="text-4xl font-extrabold text-center py-5"
-                />
-                <p className="text-lg text-center mb-8">
-                    Enter your details to get started
-                </p>
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-5"
-                    >
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                            placeholder="Enter your Full Name"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                            placeholder="Email"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="phoneNumber"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <PhoneInput
-                                            defaultCountry="in"
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                            inputProps={{
-                                                className: `w-full p-1 text-lg outline-none border-black border-2 bg-white`,
-                                                placeholder:
-                                                    "Enter your phone number",
-                                            }}
-                                            countrySelectorStyleProps={{
-                                                className: ` pl-0 pr-1 py-1  `,
-                                            }}
-                                            dialCodePreviewStyleProps={{
-                                                className: `text-lg p-1 bg-white `,
-                                            }}
-                                            className="flex w-full items-center "
-                                            inputClassName="border-2 border-black w-full text-lg outline-none border-2 bg-white "
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                            placeholder="Password"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="confirmPassword"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                            placeholder="Confirm Password"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <PastelButton
-                            type="submit"
-                            message=""
-                            className=" w-full text-center bg-white border-2 h-10"
-                            wfull
-                            disabled={loading}
+        <div className="p-10 flex items-center justify-center min-h-screen overflow-hidden">
+            <div className="flex justify-around items-center gap-10 w-full">
+                <motion.div
+                    initial={{
+                        transform: "translateX(-300px)",
+                        opacity: 0,
+                        scale: 0,
+                    }}
+                    animate={{
+                        transform: "translateX(0px)",
+                        opacity: 1,
+                        scale: 1,
+                    }}
+                    transition={{ type: "spring" }}
+                    className="w-[30vw] bg-[#CCFFE6] p-10 h-full border-2 border-black shadow-2xl"
+                >
+                    <Heading
+                        message="Register"
+                        className="text-4xl font-extrabold text-center pb-5"
+                    />
+                    <p className="text-lg text-center mb-8">
+                        Enter your details to get started
+                    </p>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-5"
                         >
-                            {loading ? "Registering..." : "Submit"}
-                        </PastelButton>
-                    </form>
-                </Form>
-                <div className="space-y-5 mt-5">
-                    <div className="text-center space-y-3">
-                        <p>
-                            Already have an account?{" "}
-                            <Link
-                                href={"/auth/login"}
-                                className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                placeholder="Enter your Full Name"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                placeholder="Email"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="phoneNumber"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <PhoneInput
+                                                defaultCountry="in"
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                inputProps={{
+                                                    className: `w-full p-1 text-lg outline-none border-black border-2 bg-white`,
+                                                    placeholder:
+                                                        "Enter your phone number",
+                                                }}
+                                                countrySelectorStyleProps={{
+                                                    className: ` pl-0 pr-1 py-1  `,
+                                                }}
+                                                dialCodePreviewStyleProps={{
+                                                    className: `text-lg p-1 bg-white `,
+                                                }}
+                                                className="flex w-full items-center "
+                                                inputClassName="border-2 border-black w-full text-lg outline-none border-2 bg-white "
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                placeholder="Password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                placeholder="Confirm Password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <PastelButton
+                                type="submit"
+                                message=""
+                                className=" w-full text-center bg-white border-2 h-10"
+                                wfull
+                                disabled={loading}
                             >
-                                Login
-                            </Link>
-                        </p>
+                                {loading ? "Registering..." : "Submit"}
+                            </PastelButton>
+                        </form>
+                    </Form>
+                    <div className="space-y-5 mt-5">
+                        <div className="text-center space-y-3">
+                            <p>
+                                Already have an account?{" "}
+                                <Link
+                                    href={"/auth/login"}
+                                    className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                                >
+                                    Login
+                                </Link>
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </motion.div>
+                <motion.div
+                    initial={{
+                        transform: "translateX(300px)",
+                        opacity: 0,
+                        scale: 0,
+                    }}
+                    animate={{
+                        transform: "translateX(0px)",
+                        opacity: 1,
+                        scale: 1,
+                    }}
+                    transition={{ type: "spring" }}
+                >
+                    <Image
+                        src={"/email-signup.png"}
+                        height={500}
+                        width={500}
+                        alt="login"
+                    />
+                </motion.div>
             </div>
         </div>
     );

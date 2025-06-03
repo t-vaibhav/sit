@@ -5,11 +5,13 @@ import PastelButton from "@/components/PastelButton";
 import Heading from "@/components/Heading";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const manrope = Manrope({
     subsets: ["latin"],
     variable: "--font-manrope",
 });
+import { motion } from "motion/react";
 
 // Define the User interface based on your Mongoose schema
 interface User {
@@ -91,6 +93,7 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
+        toast("testing");
         if (userData?.user?.phone) {
             console.log("User data set in state (phone):", userData.user.phone);
         } else if (userData) {
@@ -131,8 +134,19 @@ export default function Home() {
 
     return (
         <div className="p-6">
-            <div
-                className={` ${manrope.variable} bg-[#EDFCD1] heading text-lg  grid grid-cols-2 gap-10`}
+            <motion.div
+                initial={{
+                    transform: "translateY(-300px)",
+                    opacity: 0,
+                    scale: 0,
+                }}
+                animate={{
+                    transform: "translateY(0px)",
+                    opacity: 1,
+                    scale: 1,
+                }}
+                transition={{ type: "keyframes" }}
+                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg  grid grid-cols-2 gap-10`}
             >
                 <div className="py-20 px-10">
                     <Heading
@@ -150,30 +164,44 @@ export default function Home() {
                     accusantium sapiente molestiae corporis, aperiam voluptatum
                     inventore tenetur ex qui
                 </div>
-            </div>
-            <div className=" h-full grid grid-cols-3 gap-10 px-5">
-                <CTACards
-                    src="/user.png"
-                    title="To yourself"
-                    content="Send files, docs or messages to yourself"
-                    link={`/app/send/?number=${userPhone}`} // userPhone should now correctly contain the phone number
-                />
-                <CTACards
-                    src="/friends.png"
-                    title="To number"
-                    content="Send files, docs or messages to any number"
-                    link="/app/send"
-                />
-                <CTACards
-                    src="/favourite.png"
-                    title="To your favourites"
-                    content="Start sending to your favourite contacts"
-                    link="/app/favourites"
-                />
-            </div>
-            <div className="px-5 pt-20 ">
-                <PastelButton message="Check History" />
-            </div>
+            </motion.div>
+            <motion.div
+                initial={{
+                    transform: "translateY(300px)",
+                    opacity: 0,
+                    scale: 0,
+                }}
+                animate={{
+                    transform: "translateY(0px)",
+                    opacity: 1,
+                    scale: 1,
+                }}
+                transition={{ type: "keyframes" }}
+            >
+                <div className=" h-full grid grid-cols-3 gap-10 px-5">
+                    <CTACards
+                        src="/user.png"
+                        title="To yourself"
+                        content="Send files, docs or messages to yourself"
+                        link={`/app/send/?number=${userPhone}`} // userPhone should now correctly contain the phone number
+                    />
+                    <CTACards
+                        src="/friends.png"
+                        title="To number"
+                        content="Send files, docs or messages to any number"
+                        link="/app/send"
+                    />
+                    <CTACards
+                        src="/favourite.png"
+                        title="To your favourites"
+                        content="Start sending to your favourite contacts"
+                        link="/app/favourites"
+                    />
+                </div>
+                <div className="px-5 pt-20 ">
+                    <PastelButton message="Check History" />
+                </div>
+            </motion.div>
         </div>
     );
 }

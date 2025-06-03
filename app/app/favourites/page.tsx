@@ -1,10 +1,11 @@
 "use client";
-import CTACards from "@/components/CTACards";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import { Manrope } from "next/font/google";
-import PastelButton from "@/components/PastelButton";
 import Heading from "@/components/Heading";
 import Image from "next/image";
-import { Edit2Icon, Loader2, PlusCircle, X, XCircle } from "lucide-react";
+import { Loader2, PlusCircle, XCircle } from "lucide-react";
 import { BsTrash } from "react-icons/bs";
 import { MdOutlineEdit } from "react-icons/md";
 import Link from "next/link";
@@ -12,13 +13,12 @@ import React, { useEffect, useState } from "react";
 
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
-    DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { easeInOut, motion } from "motion/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -35,7 +35,6 @@ import {
 import { toast } from "sonner";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
-import { div } from "motion/react-client";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 
@@ -73,7 +72,7 @@ const Favourite = ({ name, number, id, onDelete, onEdit }: any) => {
     }, [editOpen, name, number, editForm]);
 
     return (
-        <div className="flex justify-between gap-5 bg-pink-200 px-5 p-3 border border-black">
+        <div className="flex justify-between gap-5 bg-[#CCFFE6] px-5 p-3 border border-black">
             <Link href={`/app/send/?number=${number}`} className="flex-1">
                 <div className="flex-1 flex gap-5">
                     <Image
@@ -94,7 +93,7 @@ const Favourite = ({ name, number, id, onDelete, onEdit }: any) => {
                     <DialogTrigger asChild>
                         <MdOutlineEdit className="scale-110 hover:scale-150 transition-all duration-200 ease-in-out cursor-pointer" />
                     </DialogTrigger>
-                    <DialogContent className="border-2 border-black rounded-none bg-[#EDFCD1]">
+                    <DialogContent className="border-2 border-black rounded-none bg-[#FFFFCC]">
                         <DialogTitle className="mb-5">
                             <Heading
                                 message="Edit your favourite contact"
@@ -196,7 +195,7 @@ export default function Home() {
     const fetchFavourites = () => {
         setLoading(true); // Ensure loading is true when fetch starts
         setError(null); // Clear any previous errors
-        const response = axios
+        axios
             .get("http://localhost:5000/api/favourites/", {
                 withCredentials: true,
             })
@@ -378,7 +377,7 @@ export default function Home() {
     return (
         <div className="p-6">
             <div
-                className={` ${manrope.variable} bg-[#EDFCD1] heading text-lg pt-5 px-5 gap-10`}
+                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg pt-5 px-5 gap-10`}
             >
                 <Heading
                     message="Your favourites"
@@ -390,15 +389,34 @@ export default function Home() {
                     ) : error ? (
                         <ErrorDisplay message={error} />
                     ) : favourites.length > 0 ? (
-                        favourites.map((fav: any) => (
-                            <Favourite
-                                key={fav._id}
-                                name={fav.name}
-                                number={fav.number}
-                                id={fav._id}
-                                onDelete={deleteFavourites}
-                                onEdit={editFavourite} // Pass the edit function
-                            />
+                        favourites.map((fav: any, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{
+                                    y: 30,
+                                    opacity: 0,
+                                    // scale: 0.7,
+                                }}
+                                whileInView={{
+                                    y: 0,
+                                    opacity: 1,
+                                    // scale: 1,
+                                }}
+                                transition={{
+                                    duration: 0.2,
+                                    delay: index * 0.1,
+                                    ease: easeInOut,
+                                }}
+                            >
+                                <Favourite
+                                    key={fav._id}
+                                    name={fav.name}
+                                    number={fav.number}
+                                    id={fav._id}
+                                    onDelete={deleteFavourites}
+                                    onEdit={editFavourite} // Pass the edit function
+                                />
+                            </motion.div>
                         ))
                     ) : (
                         <p className="text-center text-gray-500">
@@ -407,7 +425,7 @@ export default function Home() {
                     )}
                 </div>
                 <div className="flex justify-center items-center mt-10 ">
-                    <div className="flex items-center space-x-5 hover:cursor-pointer hover:bg-pink-300 bg-pink-200 transition-all duration-200 ease-in-out px-3 py-2 border border-black">
+                    <div className="flex items-center space-x-5 hover:cursor-pointer hover:bg- bg-[#FFFFCC] transition-all duration-200 ease-in-out px-3 py-2 border border-black">
                         <Dialog
                             open={addDialogOpen}
                             onOpenChange={setAddDialogOpen}
@@ -415,7 +433,7 @@ export default function Home() {
                             <DialogTrigger className="flex items-center cursor-pointer">
                                 Add More <PlusCircle className="ml-2 h-5 w-5" />
                             </DialogTrigger>
-                            <DialogContent className="border-2 border-black rounded-none bg-[#EDFCD1]">
+                            <DialogContent className="border-2 border-black rounded-none bg-[#FFFFCC]">
                                 <DialogTitle className="mb-5">
                                     <Heading
                                         message="Add your favourite contact"

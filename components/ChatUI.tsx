@@ -12,7 +12,7 @@ const ChatUI = () => {
             />
 
             <div className="grid space-y-16">
-                <div className="grid grid-cols-5 gap-5 bg-[#FCD1EF] p-10 border-2 border-black">
+                <div className="grid grid-cols-5 gap-5 bg-[#FFFFCC] p-10 border-2 border-black">
                     <div className="col-span-3">
                         <Heading
                             message="Problem: "
@@ -42,7 +42,7 @@ const ChatUI = () => {
                         />
                     </div>
                 </div>
-                <div className="grid grid-cols-5 gap-5 bg-[#FCD1EF] p-10 border-2 border-black">
+                <div className="grid grid-cols-5 gap-5 bg-[#FFFFCC] p-10 border-2 border-black">
                     <div className="col-span-3">
                         <Heading
                             message="Solution: "
@@ -89,7 +89,7 @@ export default ChatUI;
 message="Before: "
 className="text-2xl pb-10 text-start"
 />
-<div className="space-y-6 text-start p-10 bg-pink-200 border border-black">
+<div className="space-y-6 text-start p-10 bg-[#CCFFE6] border border-black">
 <p>
     Your phone is dead, and you can't scan the QR
     code.✅

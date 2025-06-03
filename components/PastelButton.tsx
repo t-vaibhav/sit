@@ -40,7 +40,7 @@ export default function PastelButton({
                 // The styling for the "pastel" effect goes here
                 className={`
                     ${className}
-                    bg-pink-300 h-full w-full border border-black px-5 font-normal py-2 shadow-md relative flex items-center text-base hover:-translate-y-1 hover:-translate-x-1 ease-in-out duration-200
+                    bg-[#CCCCFF] h-full w-full border border-black px-5 font-normal py-2 shadow-md relative flex items-center text-base hover:-translate-y-1 hover:-translate-x-1 ease-in-out duration-200 
                     ${children ? "justify-center" : "justify-center"}
                     ${
                         disabled ? "pointer-events-none" : ""

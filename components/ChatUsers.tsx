@@ -1,7 +1,7 @@
 // src/components/ChatUsers.tsx (or wherever your ChatUser component is located)
 
 import React from "react";
-import { Volume2, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { GrAttachment } from "react-icons/gr";
 
 // Make sure this interface is defined correctly
@@ -9,7 +9,7 @@ interface ChatUserProps {
     timeSent: string;
     number: string;
     recentMessage: string;
-    files: any[];
+    files: [];
 }
 
 // This line is the most important for the error you're seeing
@@ -20,7 +20,7 @@ const ChatUser: React.FC<ChatUserProps> = ({
     files,
 }) => {
     return (
-        <div className="flex bg-[#F9FAFB] items-center justify-between hover:bg-[#C0F65E] text-black p-4 w-full hover:text-black cursor-pointer border-b border-gray-200">
+        <div className="flex bg-[#F9FAFB] items-center justify-between hover:bg-[#FFFFCC] text-black p-4 w-full hover:text-black cursor-pointer border-b border-gray-200">
             <div className="flex items-center space-x-3 w-full overflow-hidden">
                 <div className="bg-gray-700 p-2 rounded-full flex-shrink-0">
                     <Users size={20} className="text-gray-400" />

@@ -23,7 +23,7 @@ export default function Page() {
             );
             toast.dismiss(loadingToastId); // Dismiss the loading toast
             toast.success("Logged out successfully");
-            router.push("/auth/login"); // Redirect to the login page after successful logout
+            router.push("/"); // Redirect to the login page after successful logout
         } catch (error) {
             toast.dismiss(loadingToastId); // Dismiss the loading toast even on error
             console.error("Logout error:", error); // Log the error for debugging
@@ -33,7 +33,7 @@ export default function Page() {
 
     return (
         <div className="p-20 flex  items-center justify-center h-full">
-            <div className="w-full max-w-md bg-[#C0F65E] p-8 rounded-lg shadow-md h-full flex flex-col justify-between">
+            <div className="w-full max-w-md bg-[#FFFFCC] p-8 rounded-lg shadow-md h-full flex flex-col justify-between">
                 <Heading message="Profile Details:" className="text-4xl mb-8" />
                 <div className="space-y-5 flex flex-col justify-between h-full">
                     <div className="flex-1 space-y-5">

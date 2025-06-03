@@ -57,7 +57,7 @@ export default function VerifyEmailPage() {
 
             toast.promise(registrationPromise, {
                 loading: "Verifying your email...",
-                success: (response) => {
+                success: () => {
                     setTimeout(() => {
                         router.push("/auth/login");
                     }, 1000);
@@ -102,7 +102,7 @@ export default function VerifyEmailPage() {
 
             toast.promise(otpSendPromise, {
                 loading: "Sending OTP to your email...",
-                success: (response) => {
+                success: () => {
                     setSendingOTP(true); // Show OTP input after successful send
                     return "OTP sent successfully!";
                 },
@@ -124,7 +124,7 @@ export default function VerifyEmailPage() {
 
     return (
         <div className="p-10 flex items-center justify-center">
-            <div className="w-[30vw] bg-pink-200 p-10 h-full border-2 border-black shadow-2xl">
+            <div className="w-[30vw] bg-[#CCFFE6] p-10 h-full border-2 border-black shadow-2xl">
                 <Heading
                     message="Verify your email"
                     className="text-4xl font-extrabold text-center py-5"

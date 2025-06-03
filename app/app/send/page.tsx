@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 "use client";
 
 import React, { useState } from "react";
@@ -7,7 +10,7 @@ import { MdOutlineAttachment } from "react-icons/md";
 import Image from "next/image";
 import Heading from "@/components/Heading";
 import PastelButton from "@/components/PastelButton"; // Assuming this is your custom button
-import { number, z } from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -23,6 +26,7 @@ import { toast } from "sonner"; // For notifications
 import { useEdgeStore } from "@/lib/edgeStore";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
+import { motion } from "motion/react";
 
 // Define your Zod schema
 const formSchema = z.object({
@@ -183,7 +187,7 @@ export default function PhoneNumberInput() {
         console.log("Form values:", values);
         console.log("here");
         console.log("Attached files (Edge Store URLs):", uploadedFiles);
-        
+
         // Prepare data to send to your MENN backend
         const payload = {
             number: values.phoneNumber.substring(1),
@@ -242,9 +246,22 @@ export default function PhoneNumberInput() {
     }
 
     return (
-        <div className="py-20 px-32">
-            <div className="grid grid-cols-4">
-                <div className="col-span-2 w-full">
+        <div className="py-20 px-32 overflow-hidden">
+            <div className="grid grid-cols-4 ">
+                <motion.div
+                    initial={{
+                        transform: "translateX(-300px)",
+                        opacity: 0,
+                        scale: 0,
+                    }}
+                    animate={{
+                        transform: "translateX(0px)",
+                        opacity: 1,
+                        scale: 1,
+                    }}
+                    transition={{ type: "tween" }}
+                    className="col-span-2 w-full"
+                >
                     <Heading
                         message="Enter details"
                         className="text-4xl pb-8"
@@ -414,10 +431,23 @@ export default function PhoneNumberInput() {
                             </div>
                         </form>
                     </Form>
-                </div>
+                </motion.div>
 
                 {/* left side image */}
-                <div className="col-span-2 flex justify-center h-full w-full">
+                <motion.div
+                    initial={{
+                        transform: "translateX(300px)",
+                        opacity: 0,
+                        scale: 0,
+                    }}
+                    animate={{
+                        transform: "translateX(0px)",
+                        opacity: 1,
+                        scale: 1,
+                    }}
+                    transition={{ type: "tween" }}
+                    className="col-span-2 flex justify-center h-full w-full"
+                >
                     <Image
                         src={"/messaging.png"}
                         height={500}
@@ -425,7 +455,7 @@ export default function PhoneNumberInput() {
                         alt="illustrate"
                         className="object-cover"
                     />
-                </div>
+                </motion.div>
             </div>
         </div>
     );

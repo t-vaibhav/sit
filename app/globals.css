@@ -8,7 +8,7 @@
 @layer utilities {
     .scroll {
         scrollbar-width: thin; /* Firefox */
-        scrollbar-color: #c0f65e #edfcd1; /* Thumb color and track color */
+        scrollbar-color: #ffffcc #ffffcc; /* Thumb color and track color */
     }
 
     /* .scroll::-webkit-scrollbar {
@@ -20,11 +20,11 @@
     }
 
     .scroll::-webkit-scrollbar-thumb {
-        @apply bg-[#EDFCD1] rounded-lg transition-all;
+        @apply bg-[#FFFFCC] rounded-lg transition-all;
     }
 
     .scroll::-webkit-scrollbar-thumb:hover {
-        @apply bg-[#C0F65E];
+        @apply bg-[#FFFFCC];
     }
 }
 
@@ -207,7 +207,7 @@
 }
 
 html {
-    background-color: #edfcd1;
+    background-color: #ffffcc;
 }
 
 .phone-input-container {
@@ -252,3 +252,30 @@ html {
 /* .react-international-phone-input-container {
     height: 40px;
 } */
+
+.toast-class {
+    border-radius: 0px !important;
+    border-width: 1px !important;
+    border-color: black !important;
+    background-color: #ffffcc !important;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px dotted #000000;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
