@@ -72,7 +72,7 @@ export default function RegisterPage() {
 
         try {
             const registrationPromise = axios.post(
-                "http://localhost:5000/api/user/register",
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/register",
                 {
                     name: values.name,
                     email: values.email,
@@ -91,9 +91,8 @@ export default function RegisterPage() {
                 success: () => {
                     // 'response' here is the resolved value from axios.post
                     // Navigate after the toast shows, or immediately after success if you prefer
-                    setTimeout(() => {
-                        router.push("/auth/verify-email");
-                    }, 1000); // Give the toast a moment to be visible
+
+                    router.push("/auth/verify-email");
 
                     return "Registration successful!";
                 },

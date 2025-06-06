@@ -5,13 +5,13 @@ import PastelButton from "@/components/PastelButton";
 import Heading from "@/components/Heading";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 const manrope = Manrope({
     subsets: ["latin"],
     variable: "--font-manrope",
 });
 import { motion } from "motion/react";
+import { XCircle } from "lucide-react";
 
 // Define the User interface based on your Mongoose schema
 interface User {
@@ -32,6 +32,7 @@ interface User {
 interface UserApiResponse {
     user?: User; // 'user' object is directly at the top level, and is optional
     message?: string; // Optional message field at top level (if your API sends it)
+    error?: boolean; // Added for backend error responses
 }
 
 export default function Home() {
@@ -41,32 +42,47 @@ export default function Home() {
 
     const fetchData = () => {
         axios
-            .get<UserApiResponse>("http://localhost:5000/api/user/me", {
-                withCredentials: true,
-            })
+            .get<UserApiResponse>(
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/me",
+                {
+                    withCredentials: true,
+                }
+            )
             .then((res) => {
-                console.log("API Response Data (from .then):", res.data);
-                console.log(
-                    "API Response User Object (from .then):",
-                    res.data?.user
-                );
-                console.log(
-                    "API Response User Phone (from .then):",
-                    res.data?.user?.phone
-                );
+                // console.log("API Response Data (from .then):", res.data);
+                // console.log(
+                //     "API Response User Object (from .then):",
+                //     res.data?.user
+                // );
+                // console.log(
+                //     "API Response User Phone (from .then):",
+                //     res.data?.user?.phone
+                // );
 
                 setUserData(res.data);
             })
             .catch((err) => {
-                console.error("Error fetching messages:", err);
+                // console.error("Error fetching messages:", err);
                 if (axios.isAxiosError(err)) {
                     if (err.response) {
+                        // --- ADDED FOR DEBUGGING ---
+                        // console.error(
+                        //     "Axios Error Response Data:",
+                        //     err.response.data
+                        // );
+                        // --- END DEBUGGING ---
                         if (err.response.status === 500) {
                             setError(
-                                "Server error (500). Please try again later or contact support."
+                                "Server error (500). Please try again or contact support."
                             );
                         } else if (err.response.status === 401) {
-                            setError("Unauthorized. Please log in.");
+                            // Use the message from the backend if available
+                            const backendMessage = (
+                                err.response.data as UserApiResponse
+                            )?.message;
+                            setError(
+                                backendMessage || "Unauthorized. Please log in."
+                            );
                         } else {
                             setError(
                                 `API Error: ${err.response.status} - ${
@@ -75,12 +91,10 @@ export default function Home() {
                             );
                         }
                     } else if (err.message) {
-                        setError(`Failed to fetch messages: ${err.message}.`);
+                        setError(`Failed to load: ${err.message}.`);
                     }
                 } else {
-                    setError(
-                        "Failed to fetch messages. Please check your connection and try again."
-                    );
+                    setError("Please try again or contact support.");
                 }
             })
             .finally(() => {
@@ -91,18 +105,6 @@ export default function Home() {
     useEffect(() => {
         fetchData();
     }, []);
-
-    useEffect(() => {
-        toast("testing");
-        if (userData?.user?.phone) {
-            console.log("User data set in state (phone):", userData.user.phone);
-        } else if (userData) {
-            console.log(
-                "User data set in state, but phone property is missing or invalid. Full userData:",
-                userData
-            );
-        }
-    }, [userData]);
 
     const userName = userData?.user?.name || "User";
     const userPhone = userData?.user?.phone || "";
@@ -117,18 +119,23 @@ export default function Home() {
 
     if (error) {
         return (
-            <div className="flex flex-col items-center justify-center h-screen text-red-500 text-xl p-4 text-center">
-                <p>Error: {error}</p>
-                <PastelButton
-                    message="Retry"
-                    onClick={() => {
-                        setLoading(true);
-                        setError(null);
-                        fetchData();
-                    }}
-                    className="mt-4"
-                />
-            </div>
+            <>
+                <div className="flex flex-col items-center justify-center h-full text-red-700">
+                    <XCircle className="h-8 w-8 text-red-500" />
+                    <p className="mt-4 text-xl font-semibold">Error:</p>
+                    <p className="text-center px-4 text-lg">{error}</p>
+                    <button
+                        onClick={() => {
+                            setLoading(true);
+                            setError(null);
+                            fetchData();
+                        }}
+                        className="mt-6 px-4 py-2 bg-red-500 text-white  cursor-pointer hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 "
+                    >
+                        Retry
+                    </button>
+                </div>
+            </>
         );
     }
 
@@ -150,7 +157,14 @@ export default function Home() {
             >
                 <div className="py-20 px-10">
                     <Heading
-                        message={`Hey! ${userName}`}
+                        message={`Hey! ${userName
+                            .toLowerCase()
+                            .split(" ")
+                            .map(
+                                (word) =>
+                                    word.charAt(0).toUpperCase() + word.slice(1)
+                            )
+                            .join(" ")}`}
                         className="text-lg py-2"
                     />
                     <Heading

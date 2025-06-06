@@ -1,7 +1,7 @@
 // page.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { SearchIcon, Loader2, XCircle } from "lucide-react"; // Import Loader2 for spinner, XCircle for error
+import { SearchIcon, XCircle } from "lucide-react"; // Import Loader2 for spinner, XCircle for error
 import ChatUser from "@/components/ChatUsers";
 import axios from "axios";
 // import { div } from "motion/react-client";
@@ -27,30 +27,30 @@ export default function Page() {
         setLoading(true); // Ensure loading is true when fetch starts
         setError(null); // Clear any previous errors
         axios
-            .get("http://localhost:5000/api/get-all/", {
+            .get(process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/get-all/", {
                 withCredentials: true,
             })
             .then((res) => {
-                console.log("Response from server:", res.data);
+                // console.log("Response from server:", res.data);
                 if (Array.isArray(res.data.data)) {
                     setMessages(res.data.data as Message[]);
                 } else {
-                    console.error(
-                        "API response data is not an array:",
-                        res.data
-                    );
+                    // console.error(
+                    //     "API response data is not an array:",
+                    //     res.data
+                    // );
                     setError("Invalid data format received from the server.");
                 }
             })
             .catch((err) => {
-                console.error("Error fetching messages:", err);
+                // console.error("Error fetching messages:", err);
                 if (
                     axios.isAxiosError(err) &&
                     err.response &&
                     err.response.status === 500
                 ) {
                     setError(
-                        "Server error (500). Please try again later or contact support."
+                        "Server error (500). Please try again or contact support."
                     );
                 } else if (axios.isAxiosError(err) && err.message) {
                     setError(`Failed to fetch messages: ${err.message}.`);
@@ -72,26 +72,27 @@ export default function Page() {
     // Loader Component for better visual feedback
     const LoadingSpinner = () => (
         <div className="flex flex-col items-center justify-center h-full">
-            <Loader2 className="h-12 w-12 animate-spin text-gray-500" />
-            <p className="mt-4 text-lg text-gray-600">Loading chats...</p>
+            {/* <div className="loader" /> */}
+            <p className="mt-4 text-lg text-black">Loading chats...</p>
         </div>
     );
     const SearchingSpinner = () => (
         <div className="flex flex-col items-center justify-center h-full">
-            <Loader2 className="h-12 w-12 animate-spin text-gray-500" />
-            <p className="mt-4 text-lg text-gray-600">Searching messages...</p>
+            <div className="loader" />
+            {/* <Loader2 className="h-12 w-12 animate-spin text-gray-500" /> */}
+            <p className="mt-4 text-lg text-black">Searching messages...</p>
         </div>
     );
 
     // Error Message Component
     const ErrorDisplay = ({ message }: { message: string }) => (
         <div className="flex flex-col items-center justify-center h-full text-red-700">
-            <XCircle className="h-12 w-12 text-red-500" />
-            <p className="mt-4 text-lg font-semibold">Error:</p>
-            <p className="text-center px-4">{message}</p>
+            <XCircle className="h-8 w-8 text-red-500" />
+            <p className="mt-4 text-xl font-semibold">Error:</p>
+            <p className="text-center px-4 text-lg">{message}</p>
             <button
                 onClick={fetchMessages}
-                className="mt-6 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="mt-6 px-4 py-2 bg-red-500 text-white  cursor-pointer hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 "
             >
                 Retry
             </button>
@@ -111,13 +112,14 @@ export default function Page() {
 
         if (searchQueryValue.length <= 0) {
             toast.error("Please a enter value for searching");
+            fetchMessages();
             setSearching(false);
-
             return;
         }
         axios
             .post(
-                "http://localhost:5000/api/search-messages/",
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL +
+                    "/api/search-messages/",
                 {
                     searchQuery: searchQueryValue,
                 },
@@ -126,32 +128,32 @@ export default function Page() {
                 }
             )
             .then((res) => {
-                console.log("Response from server:", res.data);
+                // console.log("Response from server:", res.data);
                 if (Array.isArray(res.data.data)) {
                     setMessages(res.data.data as Message[]);
                 } else {
-                    console.error(
-                        "API response data is not an array:",
-                        res.data
-                    );
+                    // console.error(
+                    //     "API response data is not an array:",
+                    //     res.data
+                    // );
                     setError("Invalid data format received from the server.");
                 }
             })
             .catch((err) => {
-                console.error("Error fetching messages:", err);
+                // console.error("Error fetching messages:", err);
                 if (
                     axios.isAxiosError(err) &&
                     err.response &&
                     err.response.status === 500
                 ) {
                     setError(
-                        "Server error (500). Please try again later or contact support."
+                        "Server error (500). Please try again or contact support."
                     );
                 } else if (axios.isAxiosError(err) && err.message) {
-                    setError(`Failed to fetch messages: ${err.message}.`);
+                    setError(`Failed to search messages: ${err.message}.`);
                 } else {
                     setError(
-                        "Failed to fetch messages. Please check your connection and try again."
+                        "Failed to search messages. Please check your connection and try again."
                     );
                 }
             })
@@ -165,10 +167,10 @@ export default function Page() {
         }
     };
     return (
-        <div className="h-screen flex bg-[#F6FDE8] overflow-hidden">
+        <div className="h-screen flex bg-[#FFFFCC] overflow-hidden">
             <div className="w-full h-full flex flex-col border-r border-gray-400">
                 {/* Search Bar */}
-                <div className="sticky top-0 left-0 right-0 bg-[#F6FDE8] z-10">
+                <div className="sticky top-0 left-0 right-0 bg-[#FFFFCC] z-10">
                     <div className="p-2 border-b border-black h-16 flex items-center justify-between relative">
                         <input
                             value={searchQueryValue}
@@ -194,6 +196,7 @@ export default function Page() {
                     ) : searching ? (
                         <SearchingSpinner />
                     ) : messages.length > 0 ? (
+                        // <SearchingSpinner />
                         messages.map((user) => {
                             const date = new Date(user.createdAt);
                             const formattedTime = date.toLocaleTimeString([], {
@@ -213,8 +216,10 @@ export default function Page() {
                             );
                         })
                     ) : (
-                        <div className="p-4 text-center text-gray-600">
-                            No messages found.
+                        <div className="p-4 text-center text-gray-600 h-full w-full flex justify-center items-center">
+                            <div className="text-xl text-black">
+                                No messages found.
+                            </div>
                         </div>
                     )}
                 </div>

@@ -3,7 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { EdgeStoreProvider } from "@/lib/edgeStore";
-
+// import LoadingIndicator from "@/components/LoadingIndicator";
+import { LoadingProvider } from "@/components/LoadingContext"; // Import your provider
+import GlobalLoader from "@/components/GlobalLoader";
+import ToastLoader from "@/components/ToastLoader";
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -29,7 +32,13 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#FFFFCC]`}
             >
-                <EdgeStoreProvider>{children}</EdgeStoreProvider>
+                {/* <LoadingIndicator /> */}
+                <EdgeStoreProvider>
+                    <LoadingProvider>
+                        <GlobalLoader />
+                        {children}
+                    </LoadingProvider>
+                </EdgeStoreProvider>
                 <Toaster
                     className=""
                     position="bottom-right" // Or your preferred position
@@ -54,8 +63,8 @@ export default function RootLayout({
                     icons={{
                         success: <span className="text-green-500">✔</span>,
                         error: <span className="text-red-500">✘</span>,
-                        warning: <span>warning</span>,
-                        loading: <span>loading</span>,
+                        warning: <span>!</span>,
+                        loading: <ToastLoader />,
                     }}
                     // richColors
                     // theme="light" // or "dark" or "system"

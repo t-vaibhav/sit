@@ -53,7 +53,7 @@ export default function LoginPage() {
         try {
             // OPTION 2: Set withCredentials directly on the axios.post call (recommended for this specific use case if not setting globally)
             const loginPromise = axios.post(
-                "http://localhost:5000/api/user/login", // Your login API endpoint
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/login", // Your login API endpoint
                 {
                     email: values.email,
                     password: values.password,
@@ -74,7 +74,8 @@ export default function LoginPage() {
 
                     setTimeout(() => {
                         router.push("/app/home"); // Redirect to dashboard or home page after login
-                    }, 1000);
+                        return;
+                    }, 100);
 
                     return "Login successful!";
                 },
@@ -175,7 +176,7 @@ export default function LoginPage() {
                         <div className="space-y-5 mt-5">
                             <div className="text-center space-y-3">
                                 <p>
-                                    Don&apos;t have an account?
+                                    Don&apos;t have an account?{" "}
                                     <Link
                                         href={"/auth/register"}
                                         className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"

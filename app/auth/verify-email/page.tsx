@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/input-otp";
 
 import { toast } from "sonner";
+import PastelButton from "@/components/PastelButton";
 
 const formSchema = z.object({
     email: z.string().email({ message: "Invalid email address." }),
@@ -48,7 +49,8 @@ export default function VerifyEmailPage() {
 
         try {
             const registrationPromise = axios.post(
-                "http://localhost:5000/api/user/verify-email",
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL +
+                    "/api/user/verify-email",
                 {
                     email: values.email,
                     otp: values.otp,
@@ -94,7 +96,7 @@ export default function VerifyEmailPage() {
         try {
             const emailValue = form.getValues("email"); // Get the current email value
             const otpSendPromise = axios.post(
-                "http://localhost:5000/api/user/send-otp",
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/send-otp",
                 {
                     email: emailValue,
                 }
@@ -161,14 +163,15 @@ export default function VerifyEmailPage() {
                             )}
                         />
                         {!sendingOTP && (
-                            <Button
+                            <PastelButton
                                 type="button" // Change to type="button" to prevent form submission
                                 onClick={handleSendOTP}
-                                className="w-full rounded-none cursor-pointer bg-white text-black border-2 border-black hover:bg-black hover:text-white transition-colors"
+                                className="w-full text-center bg-white border-2 h-10"
                                 disabled={loading}
+                                wfull
                             >
                                 {loading ? "Sending OTP..." : "Send OTP"}
-                            </Button>
+                            </PastelButton>
                         )}
                         {sendingOTP && (
                             <>
@@ -208,14 +211,15 @@ export default function VerifyEmailPage() {
                                         </FormItem>
                                     )}
                                 />
-
-                                <Button
+                                <PastelButton
                                     type="submit"
-                                    className="w-full rounded-none cursor-pointer bg-white text-black border-2 border-black hover:bg-black hover:text-white transition-colors"
+                                    message=""
+                                    className=" w-full text-center bg-white border-2 h-10"
+                                    wfull
                                     disabled={loading}
                                 >
                                     {loading ? "Verifying..." : "Verify Email"}
-                                </Button>
+                                </PastelButton>
                             </>
                         )}
                     </form>
@@ -223,7 +227,7 @@ export default function VerifyEmailPage() {
                 <div className="space-y-5 mt-5">
                     <div className="text-center space-y-3">
                         <p>
-                            Already have an account?{" "}
+                            Already Verified?{" "}
                             <Link
                                 href={"/auth/login"}
                                 className="hover:underline cursor-pointer"

@@ -18,23 +18,32 @@ function LoadingSpinner() {
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    // const [isAuth, setIsAuth] = useState(false);
 
+    // ...existing code...
     useEffect(() => {
-        const checkAuth = () => {
+        let timeoutId: NodeJS.Timeout;
+
+        const checkAuth = async () => {
             const authCookie = Cookies.get("is_auth");
             const authenticated = authCookie === "true";
 
             if (!authenticated) {
-                toast.error("Please login to access this page");
+                timeoutId = setTimeout(() => {
+                    toast.error("Please login to access this page");
+                }, 500); // 500ms delay for the toast
                 router.push("/auth/login");
+                return;
             }
             setIsLoading(false);
         };
 
         checkAuth();
-    }, [router]);
 
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+        };
+    }, [router]);
+    // ...existing code...
     if (isLoading) {
         return <LoadingSpinner />;
     }

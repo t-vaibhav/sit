@@ -79,6 +79,7 @@ export default function Home() {
             const authenticated = authCookie === "true";
             if (authenticated) {
                 router.push("/app/home");
+                return;
             }
             setIsLoading(false);
         };

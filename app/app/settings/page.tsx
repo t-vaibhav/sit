@@ -2,20 +2,152 @@
 import Heading from "@/components/Heading";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import PastelButton from "@/components/PastelButton";
+
+// Define the User interface based on your Mongoose schema
+interface User {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string; // Phone is now confirmed to be present in the User object
+    is_verified: boolean;
+    roles: ("user" | "admin")[];
+    createdAt?: string; // Mongoose adds createdAt and updatedAt
+    updatedAt?: string;
+    __v?: number; // Add this if your API returns it and you want it typed
+}
+
+// *** CRITICAL CHANGE HERE ***
+// Define the API response structure to directly match what your API returns:
+// The 'user' object is at the top level, not nested under 'data'.
+interface UserApiResponse {
+    user?: User; // 'user' object is directly at the top level, and is optional
+    message?: string; // Optional message field at top level (if your API sends it)
+    error?: boolean; // Added for backend error responses
+}
 
 export default function Page() {
     const router = useRouter(); // Initialize the router
+    const [userData, setUserData] = useState<UserApiResponse | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
+    const fetchData = () => {
+        axios
+            .get<UserApiResponse>(
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/me",
+                {
+                    withCredentials: true,
+                }
+            )
+            .then((res) => {
+                console.log("API Response Data (from .then):", res.data);
+                console.log(
+                    "API Response User Object (from .then):",
+                    res.data?.user
+                );
+                console.log(
+                    "API Response User Phone (from .then):",
+                    res.data?.user?.phone
+                );
+
+                setUserData(res.data);
+            })
+            .catch((err) => {
+                console.error("Error fetching messages:", err);
+                if (axios.isAxiosError(err)) {
+                    if (err.response) {
+                        // --- ADDED FOR DEBUGGING ---
+                        console.error(
+                            "Axios Error Response Data:",
+                            err.response.data
+                        );
+                        // --- END DEBUGGING ---
+                        if (err.response.status === 500) {
+                            setError(
+                                "Server error (500). Please try again later or contact support."
+                            );
+                        } else if (err.response.status === 401) {
+                            // Use the message from the backend if available
+                            const backendMessage = (
+                                err.response.data as UserApiResponse
+                            )?.message;
+                            setError(
+                                backendMessage || "Unauthorized. Please log in."
+                            );
+                        } else {
+                            setError(
+                                `API Error: ${err.response.status} - ${
+                                    err.response.statusText || "Unknown Error"
+                                }`
+                            );
+                        }
+                    } else if (err.message) {
+                        setError(`Failed to fetch messages: ${err.message}.`);
+                    }
+                } else {
+                    setError(
+                        "Failed to fetch messages. Please check your connection and try again."
+                    );
+                }
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (userData?.user?.phone) {
+            console.log("User data set in state (phone):", userData.user.phone);
+        } else if (userData) {
+            console.log(
+                "User data set in state, but phone property is missing or invalid. Full userData:",
+                userData
+            );
+        }
+    }, [userData]);
+
+    // const userName = userData?.user?.name || "User";
+    // const userPhone = userData?.user?.phone || "";
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen text-2xl font-semibold">
+                Loading user data...
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen text-red-500 text-xl p-4 text-center">
+                <p>Error: {error}</p>
+                <PastelButton
+                    message="Retry"
+                    onClick={() => {
+                        setLoading(true);
+                        setError(null);
+                        fetchData();
+                    }}
+                    className="mt-4"
+                />
+            </div>
+        );
+    }
     const handleLogout = async () => {
         // Make the function asynchronous
         const loadingToastId = toast.loading("Logging out..."); // Store the toast ID
 
         try {
             await axios.post(
-                "http://localhost:5000/api/user/logout",
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/logout",
                 {}, // Send an empty object for POST requests if no body is needed
                 {
                     withCredentials: true,
@@ -33,15 +165,28 @@ export default function Page() {
 
     return (
         <div className="p-20 flex  items-center justify-center h-full">
-            <div className="w-full max-w-md bg-[#FFFFCC] p-8 rounded-lg shadow-md h-full flex flex-col justify-between">
+            <div className="w-full max-w-md bg-[#FFCCE6] p-8  border-2 border-black shadow-md h-full flex flex-col justify-between">
                 <Heading message="Profile Details:" className="text-4xl mb-8" />
                 <div className="space-y-5 flex flex-col justify-between h-full">
                     <div className="flex-1 space-y-5">
-                        <div className="text-xl">Vaibhav Tiwari</div>
                         <div className="text-xl">
-                            Email: tovaibhavt@gmail.com
+                            Name:{" "}
+                            {userData?.user?.name
+                                .toLowerCase()
+                                .split(" ")
+                                .map(
+                                    (word) =>
+                                        word.charAt(0).toUpperCase() +
+                                        word.slice(1)
+                                )
+                                .join(" ")}
                         </div>
-                        <div className="text-xl">Mob: 916393698670</div>
+                        <div className="text-xl">
+                            Email: {userData?.user?.email}
+                        </div>
+                        <div className="text-xl">
+                            Mob: {userData?.user?.phone}
+                        </div>
                     </div>
                     <Button
                         onClick={handleLogout}

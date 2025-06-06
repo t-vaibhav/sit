@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
 "use client";
@@ -119,7 +120,7 @@ export default function PhoneNumberInput() {
                     resourceType: resourceType,
                 };
             } catch (error: any) {
-                console.error("Failed to upload file to Edge Store:", error);
+                // console.error("Failed to upload files:", error);
                 toast.error(
                     `Failed to upload '${file.name}': ${
                         error.message || "Unknown error"
@@ -162,7 +163,7 @@ export default function PhoneNumberInput() {
             return newFiles;
         });
 
-        console.log("Attempting to remove file from Edge Store:", fileToRemove);
+        console.log("Attempting to remove files from server:", fileToRemove);
         if (fileToRemove) {
             edgestore.publicFiles
                 .delete({
@@ -170,43 +171,43 @@ export default function PhoneNumberInput() {
                 })
                 .then(() => {
                     toast.success(
-                        `Removed '${fileToRemove.name}' from Edge Store.`
+                        `Removed '${fileToRemove.name}' from server.`
                     );
                 })
                 .catch((err) => {
                     toast.error(
-                        `Failed to delete '${fileToRemove.name}' from Edge Store.`
+                        `Failed to delete '${fileToRemove.name}' from server.`
                     );
-                    console.error("Error deleting from Edge Store:", err);
+                    console.error("Error deleting from server:", err);
                 });
         }
     };
 
     // Define the onSubmit function for form submission
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("Form values:", values);
-        console.log("here");
-        console.log("Attached files (Edge Store URLs):", uploadedFiles);
+        // console.log("Form values:", values);
+        // console.log("here");
+        // console.log("Attached files (Edge Store URLs):", uploadedFiles);
 
         // Prepare data to send to your MENN backend
-        const payload = {
-            number: values.phoneNumber.substring(1),
-            message: values.message,
-            files: uploadedFiles.map((file) => ({
-                url: file.url,
-                filename: file.name,
-            })),
-        };
+        // const payload = {
+        //     number: values.phoneNumber.substring(1),
+        //     message: values.message,
+        //     files: uploadedFiles.map((file) => ({
+        //         url: file.url,
+        //         filename: file.name,
+        //     })),
+        // };
         const files = uploadedFiles.map((file) => ({
             url: file.url,
             filename: file.name,
         }));
-        console.log("Payload to send to backend:", payload);
+        // console.log("Payload to send to backend:", payload);
 
         try {
             // Send this data to your Next.js API route
             const messagePromise = axios.post(
-                "http://localhost:5000/api/send", // Your message sending API endpoint
+                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/send", // Your message sending API endpoint
                 {
                     number: values.phoneNumber.substring(1),
                     message: values.message,
@@ -244,7 +245,24 @@ export default function PhoneNumberInput() {
             );
         }
     }
-
+    const getFileTypeBackgroundColorClass = (fileName: string) => {
+        const extension = fileName.split(".").pop()?.toLowerCase();
+        switch (extension) {
+            case "pdf":
+                return "bg-red-500 text-white"; // Reddish for PDF
+            case "docx":
+            case "doc": // Also covers older .doc files
+                return "bg-blue-500 text-white"; // Green for DOCX
+            case "xlsx":
+            case "xls": // Also covers older .xls files
+                return "bg-green-500 text-white"; // Orange for XLSX
+            case "pptx":
+            case "ppt": // Also covers older .ppt files
+                return "bg-orange-500 text-white"; // Purple for PPT
+            default:
+                return "bg-gray-200 text-black"; // Default for other file types
+        }
+    };
     return (
         <div className="py-20 px-32 overflow-hidden">
             <div className="grid grid-cols-4 ">
@@ -327,15 +345,6 @@ export default function PhoneNumberInput() {
                             />
 
                             <div className="flex space-x-2 overflow-x-auto max-w-full mt-5 scroll">
-                                {/* show the file preview here */}
-                                {isUploading && (
-                                    <div className="flex items-center justify-center w-full">
-                                        <p className="text-blue-600">
-                                            Uploading files...{" "}
-                                            {uploadProgress.toFixed(0)}%
-                                        </p>
-                                    </div>
-                                )}
                                 {uploadedFiles.map((file, index) => (
                                     <div
                                         key={index}
@@ -347,11 +356,15 @@ export default function PhoneNumberInput() {
                                                 width={100}
                                                 src={file.url}
                                                 alt={file.name}
-                                                className="w-16 h-16 object-cover border-gray-400 shadow-md border-2"
+                                                className="w-12 h-12 object-cover border-gray-400 shadow-md border-2"
                                             />
                                         ) : (
-                                            <div className="w-16 h-16 flex items-center justify-center border-gray-400 bg-gray-200 font-semibold shadow-md border-2">
-                                                <p className="text-center text-xs p-2 break-words">
+                                            <div
+                                                className={`w-12 h-12 flex items-center justify-center border-black font-semibold shadow-md border-2 ${getFileTypeBackgroundColorClass(
+                                                    file.name
+                                                )}`}
+                                            >
+                                                <p className="text-center text-xs p-2 overflow-hidden">
                                                     {file.name}
                                                 </p>
                                             </div>
