@@ -30,7 +30,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 timeoutId = setTimeout(() => {
                     toast.error("A error has occured, login again");
                 }, 500); // 500ms delay for the toast
-                router.push("/auth/login/test");
+                router.push("/auth/login");
                 return;
             }
             const authenticated = authCookie === "true";
