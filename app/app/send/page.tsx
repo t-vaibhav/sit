@@ -207,7 +207,7 @@ export default function PhoneNumberInput() {
         try {
             // Send this data to your Next.js API route
             const messagePromise = axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/send", // Your message sending API endpoint
+                "/api/send", // Your message sending API endpoint
                 {
                     number: values.phoneNumber.substring(1),
                     message: values.message,

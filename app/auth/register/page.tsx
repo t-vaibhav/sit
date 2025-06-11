@@ -71,16 +71,13 @@ export default function RegisterPage() {
         setLoading(true);
 
         try {
-            const registrationPromise = axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/register",
-                {
-                    name: values.name,
-                    email: values.email,
-                    phone: values.phoneNumber,
-                    password: values.password,
-                    password_confirmation: values.confirmPassword,
-                }
-            );
+            const registrationPromise = axios.post("/api/user/register", {
+                name: values.name,
+                email: values.email,
+                phone: values.phoneNumber,
+                password: values.password,
+                password_confirmation: values.confirmPassword,
+            });
 
             // Use toast.promise directly. The await inside the try block for
             // registrationPromise is no longer needed after this, as sonner

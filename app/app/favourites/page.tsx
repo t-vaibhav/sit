@@ -199,12 +199,9 @@ export default function Home() {
         setLoading(true); // Ensure loading is true when fetch starts
         setError(null); // Clear any previous errors
         axios
-            .get(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/favourites/",
-                {
-                    withCredentials: true,
-                }
-            )
+            .get("/api/favourites/", {
+                withCredentials: true,
+            })
             .then((response) => {
                 setFavourites(response.data.data.users);
             })
@@ -223,13 +220,10 @@ export default function Home() {
 
     const deleteFavourites = async (number: string) => {
         try {
-            const deletePromise = axios.delete(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/favourites/",
-                {
-                    data: { number: number },
-                    withCredentials: true,
-                }
-            );
+            const deletePromise = axios.delete("/api/favourites/", {
+                data: { number: number },
+                withCredentials: true,
+            });
 
             toast.promise(deletePromise, {
                 loading: "Deleting favourite contact...",
@@ -267,7 +261,7 @@ export default function Home() {
     ) => {
         try {
             const editPromise = axios.put(
-                `process.env.NEXT_PUBLIC_BACKEND_HOST_URL/api/favourites/`, // Assuming your API uses ID for PUT
+                `/api/favourites/`, // Assuming your API uses ID for PUT
                 {
                     name: name,
                     number: number,
@@ -341,7 +335,7 @@ export default function Home() {
     async function onSubmit(values: z.infer<typeof favouriteFormSchema>) {
         try {
             const addFavouritePromise = axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/favourites/",
+                "/api/favourites/",
                 {
                     name: values.name,
                     number: values.number,
@@ -394,147 +388,143 @@ export default function Home() {
                         <LoadingSpinner />
                     ) : error ? (
                         <ErrorDisplay message={error} />
-                    ) : favourites.length > 0 ? (
-                        favourites.map((fav: any, index) => (
-                            <>
-                                <motion.div
-                                    key={index}
-                                    initial={{
-                                        y: 30,
-                                        opacity: 0,
-                                        // scale: 0.7,
-                                    }}
-                                    whileInView={{
-                                        y: 0,
-                                        opacity: 1,
-                                        // scale: 1,
-                                    }}
-                                    transition={{
-                                        duration: 0.2,
-                                        delay: index * 0.1,
-                                        ease: easeInOut,
-                                    }}
-                                >
-                                    <Favourite
-                                        key={fav._id}
-                                        name={fav.name}
-                                        number={fav.number}
-                                        id={fav._id}
-                                        onDelete={deleteFavourites}
-                                        onEdit={editFavourite} // Pass the edit function
-                                    />
-                                </motion.div>
-
-                                <div className="flex justify-center items-center mt-10 ">
-                                    <div className="flex items-center space-x-5 hover:cursor-pointer hover:bg- bg-[#CCCCFF] transition-all duration-200 ease-in-out px-3 py-2 border border-black">
-                                        <Dialog
-                                            open={addDialogOpen}
-                                            onOpenChange={setAddDialogOpen}
-                                        >
-                                            <DialogTrigger className="flex items-center cursor-pointer bg-[#CCCCFF]">
-                                                Add{" "}
-                                                <PlusCircle className="ml-2 h-5 w-5" />
-                                            </DialogTrigger>
-                                            <DialogContent className="border-2 border-black rounded-none bg-[#FFFFCC]">
-                                                <DialogTitle className="mb-5">
-                                                    <Heading
-                                                        message="Add your favourite contact"
-                                                        className="text-3xl text-black"
-                                                    />
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    <div className="flex flex-col gap-5">
-                                                        <Form {...addForm}>
-                                                            <form
-                                                                onSubmit={addForm.handleSubmit(
-                                                                    onSubmit
-                                                                )}
-                                                                className="space-y-5"
-                                                            >
-                                                                <FormField
-                                                                    control={
-                                                                        addForm.control
-                                                                    }
-                                                                    name="name"
-                                                                    render={({
-                                                                        field,
-                                                                    }) => (
-                                                                        <FormItem>
-                                                                            <FormControl>
-                                                                                <Input
-                                                                                    className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                                                                    placeholder="Enter Name"
-                                                                                    {...field}
-                                                                                />
-                                                                            </FormControl>
-                                                                            <FormMessage />
-                                                                        </FormItem>
-                                                                    )}
-                                                                />
-
-                                                                <FormField
-                                                                    control={
-                                                                        addForm.control
-                                                                    }
-                                                                    name="number"
-                                                                    render={({
-                                                                        field,
-                                                                    }) => (
-                                                                        <FormItem>
-                                                                            <FormControl>
-                                                                                <PhoneInput
-                                                                                    defaultCountry="in"
-                                                                                    value={
-                                                                                        field.value
-                                                                                    }
-                                                                                    onChange={
-                                                                                        field.onChange
-                                                                                    }
-                                                                                    inputProps={{
-                                                                                        className: `w-full p-1 text-lg outline-none border bg-white`,
-                                                                                        placeholder:
-                                                                                            "Enter your phone number",
-                                                                                    }}
-                                                                                    countrySelectorStyleProps={{
-                                                                                        className: ` pl-0 pr-1 py-1 `,
-                                                                                    }}
-                                                                                    dialCodePreviewStyleProps={{
-                                                                                        className: `text-lg p-1 bg-white `,
-                                                                                    }}
-                                                                                    className="flex w-full items-center"
-                                                                                    inputClassName="w-full text-lg outline-none border-2 bg-white"
-                                                                                />
-                                                                            </FormControl>
-                                                                            <FormMessage />
-                                                                        </FormItem>
-                                                                    )}
-                                                                />
-
-                                                                <PastelButton
-                                                                    type="submit"
-                                                                    message=""
-                                                                    className=" w-full text-center bg-[#CCCCFF] text-black border-2 h-10"
-                                                                    wfull
-                                                                    disabled={
-                                                                        loading
-                                                                    }
-                                                                >
-                                                                    Add contact
-                                                                </PastelButton>
-                                                            </form>
-                                                        </Form>
-                                                    </div>
-                                                </DialogDescription>
-                                            </DialogContent>
-                                        </Dialog>
-                                    </div>
-                                </div>
-                            </>
-                        ))
                     ) : (
-                        <p className="text-center text-gray-500">
-                            No favourites added yet.
-                        </p>
+                        <>
+                            {favourites.length > 0 ? (
+                                favourites.map((fav: any, index) => (
+                                    <motion.div
+                                        key={fav._id} // Using fav._id as the key for better list reconciliation
+                                        initial={{
+                                            y: 30,
+                                            opacity: 0,
+                                        }}
+                                        whileInView={{
+                                            y: 0,
+                                            opacity: 1,
+                                        }}
+                                        transition={{
+                                            duration: 0.2,
+                                            delay: index * 0.1, // Keep index for animation staggering
+                                            ease: easeInOut, // Ensure easeInOut is imported
+                                        }}
+                                    >
+                                        <Favourite
+                                            key={fav._id}
+                                            name={fav.name}
+                                            number={fav.number}
+                                            id={fav._id}
+                                            onDelete={deleteFavourites}
+                                            onEdit={editFavourite}
+                                        />
+                                    </motion.div>
+                                ))
+                            ) : (
+                                <p className="text-center text-gray-500">
+                                    No favourites added yet.
+                                </p>
+                            )}
+
+                            {/* Moved the Dialog outside of the map function */}
+                            <div className="flex justify-center items-center mt-10 ">
+                                <div className="flex items-center space-x-5 hover:cursor-pointer hover:bg- bg-[#CCCCFF] transition-all duration-200 ease-in-out px-3 py-2 border border-black">
+                                    <Dialog
+                                        open={addDialogOpen}
+                                        onOpenChange={setAddDialogOpen}
+                                    >
+                                        <DialogTrigger className="flex items-center cursor-pointer bg-[#CCCCFF]">
+                                            Add{" "}
+                                            <PlusCircle className="ml-2 h-5 w-5" />
+                                        </DialogTrigger>
+                                        <DialogContent className="border-2 border-black rounded-none bg-[#FFFFCC]">
+                                            <DialogTitle className="mb-5">
+                                                <Heading
+                                                    message="Add your favourite contact"
+                                                    className="text-3xl text-black"
+                                                />
+                                            </DialogTitle>
+                                            <DialogDescription>
+                                                <div className="flex flex-col gap-5">
+                                                    <Form {...addForm}>
+                                                        <form
+                                                            onSubmit={addForm.handleSubmit(
+                                                                onSubmit
+                                                            )}
+                                                            className="space-y-5"
+                                                        >
+                                                            <FormField
+                                                                control={
+                                                                    addForm.control
+                                                                }
+                                                                name="name"
+                                                                render={({
+                                                                    field,
+                                                                }) => (
+                                                                    <FormItem>
+                                                                        <FormControl>
+                                                                            <Input
+                                                                                className="w-full bg-white focus:outline-none shadow-none rounded-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 h-10"
+                                                                                placeholder="Enter Name"
+                                                                                {...field}
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+
+                                                            <FormField
+                                                                control={
+                                                                    addForm.control
+                                                                }
+                                                                name="number"
+                                                                render={({
+                                                                    field,
+                                                                }) => (
+                                                                    <FormItem>
+                                                                        <FormControl>
+                                                                            <PhoneInput
+                                                                                defaultCountry="in"
+                                                                                value={
+                                                                                    field.value
+                                                                                }
+                                                                                onChange={
+                                                                                    field.onChange
+                                                                                }
+                                                                                inputClassName="w-full text-lg outline-none border-2 bg-white p-2 h-10 rounded-none border-black" // Consolidated styling here
+                                                                                countrySelectorStyleProps={{
+                                                                                    className: `pl-0 pr-1 py-1`,
+                                                                                }}
+                                                                                dialCodePreviewStyleProps={{
+                                                                                    className: `text-lg p-1 bg-white`,
+                                                                                }}
+                                                                                className="flex w-full items-center"
+                                                                            />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+
+                                                            <PastelButton
+                                                                type="submit"
+                                                                className="w-full text-center bg-[#CCCCFF] text-black border-2 h-10"
+                                                                wfull
+                                                                disabled={
+                                                                    loading
+                                                                }
+                                                            >
+                                                                Add contact{" "}
+                                                                {/* Changed from message prop to children */}
+                                                            </PastelButton>
+                                                        </form>
+                                                    </Form>
+                                                </div>
+                                            </DialogDescription>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>

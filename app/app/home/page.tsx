@@ -42,12 +42,9 @@ export default function Home() {
 
     const fetchData = () => {
         axios
-            .get<UserApiResponse>(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/me",
-                {
-                    withCredentials: true,
-                }
-            )
+            .get<UserApiResponse>("/api/user/me", {
+                withCredentials: true,
+            })
             .then((res) => {
                 // console.log("API Response Data (from .then):", res.data);
                 // console.log(

@@ -48,14 +48,10 @@ export default function VerifyEmailPage() {
         setLoading(true);
 
         try {
-            const registrationPromise = axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL +
-                    "/api/user/verify-email",
-                {
-                    email: values.email,
-                    otp: values.otp,
-                }
-            );
+            const registrationPromise = axios.post("/api/user/verify-email", {
+                email: values.email,
+                otp: values.otp,
+            });
 
             toast.promise(registrationPromise, {
                 loading: "Verifying your email...",
@@ -95,12 +91,9 @@ export default function VerifyEmailPage() {
 
         try {
             const emailValue = form.getValues("email"); // Get the current email value
-            const otpSendPromise = axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/send-otp",
-                {
-                    email: emailValue,
-                }
-            );
+            const otpSendPromise = axios.post("/api/user/send-otp", {
+                email: emailValue,
+            });
 
             toast.promise(otpSendPromise, {
                 loading: "Sending OTP to your email...",

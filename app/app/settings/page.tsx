@@ -37,12 +37,9 @@ export default function Page() {
 
     const fetchData = () => {
         axios
-            .get<UserApiResponse>(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/me",
-                {
-                    withCredentials: true,
-                }
-            )
+            .get<UserApiResponse>("/api/user/me", {
+                withCredentials: true,
+            })
             .then((res) => {
                 console.log("API Response Data (from .then):", res.data);
                 console.log(
@@ -147,7 +144,7 @@ export default function Page() {
 
         try {
             await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/logout",
+                "/api/user/logout",
                 {}, // Send an empty object for POST requests if no body is needed
                 {
                     withCredentials: true,

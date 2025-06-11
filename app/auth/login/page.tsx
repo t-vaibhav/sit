@@ -53,7 +53,7 @@ export default function LoginPage() {
         try {
             // OPTION 2: Set withCredentials directly on the axios.post call (recommended for this specific use case if not setting globally)
             const loginPromise = axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/user/login", // Your login API endpoint
+                "/api/user/login", // Your login API endpoint
                 {
                     email: values.email,
                     password: values.password,

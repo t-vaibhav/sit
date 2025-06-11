@@ -27,7 +27,7 @@ export default function Page() {
         setLoading(true); // Ensure loading is true when fetch starts
         setError(null); // Clear any previous errors
         axios
-            .get(process.env.NEXT_PUBLIC_BACKEND_HOST_URL + "/api/get-all/", {
+            .get("/api/get-all/", {
                 withCredentials: true,
             })
             .then((res) => {
@@ -118,8 +118,7 @@ export default function Page() {
         }
         axios
             .post(
-                process.env.NEXT_PUBLIC_BACKEND_HOST_URL +
-                    "/api/search-messages/",
+                "/api/search-messages/",
                 {
                     searchQuery: searchQueryValue,
                 },
