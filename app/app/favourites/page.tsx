@@ -4,7 +4,7 @@
 import { Manrope } from "next/font/google";
 import Heading from "@/components/Heading";
 import Image from "next/image";
-import { Loader2, PlusCircle, XCircle } from "lucide-react";
+import { PlusCircle, XCircle } from "lucide-react";
 import { BsTrash } from "react-icons/bs";
 import { MdOutlineEdit } from "react-icons/md";
 import Link from "next/link";
@@ -301,12 +301,12 @@ export default function Home() {
 
     const LoadingSpinner = () => (
         <div className="flex flex-col items-center justify-center h-full">
-            <Loader2 className="h-12 w-12 animate-spin text-gray-500" />
-            <p className="mt-4 text-lg text-gray-600">Loading chats...</p>
+            <div className="loader" />
+            <p className="mt-4 text-lg text-black">Loading chats...</p>
         </div>
     );
     const ErrorDisplay = ({ message }: { message: string }) => (
-        <div className="flex flex-col items-center justify-center h-full text-red-700">
+        <div className="flex flex-col items-center justify-center  text-red-700 pt-[15vh]">
             <XCircle className="h-8 w-8 text-red-500" />
             <p className="mt-4 text-xl font-semibold">Error:</p>
             <p className="text-center px-4 text-lg">{message}</p>
@@ -375,15 +375,15 @@ export default function Home() {
     }
 
     return (
-        <div className="p-6 text-black">
+        <div className="p-6 text-black h-screen">
             <div
-                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg pt-5 px-5 gap-10`}
+                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg pt-5 px-5 gap-10 h-full flex flex-col`}
             >
                 <Heading
                     message="Your favourites"
-                    className="text-4xl pb-8 space-y-5"
+                    className="text-4xl pb-8 space-y-5 "
                 />
-                <div className="space-y-5">
+                <div className="space-y-5 flex-1 ">
                     {loading ? (
                         <LoadingSpinner />
                     ) : error ? (
@@ -419,7 +419,7 @@ export default function Home() {
                                     </motion.div>
                                 ))
                             ) : (
-                                <p className="text-center text-gray-500">
+                                <p className="text-center text-black">
                                     No favourites added yet.
                                 </p>
                             )}

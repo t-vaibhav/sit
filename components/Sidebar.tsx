@@ -3,11 +3,7 @@
 import React from "react";
 // import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LuHeart } from "react-icons/lu";
-import { GoHome } from "react-icons/go";
-import { AiOutlineSend } from "react-icons/ai";
-import { IoSettingsOutline } from "react-icons/io5";
-import { BiHistory } from "react-icons/bi";
+import { Heart, History, House, SendHorizonal, Settings } from "lucide-react";
 export default function Sidebar() {
     // console.log("Current Path:", pathname);
 
@@ -16,19 +12,19 @@ export default function Sidebar() {
     return (
         <div className="w-16 py-8 p-3 flex flex-col items-center space-y-10 text-black border-black border-r">
             <Link href="/app/home">
-                <GoHome className="text-3xl cursor-pointer" />
+                <House className="text-3xl cursor-pointer h-8 w-8" />
             </Link>
             <Link href="/app/send">
-                <AiOutlineSend className="text-3xl cursor-pointer" />
+                <SendHorizonal className="text-3xl cursor-pointer h-8 w-8" />
             </Link>
             <Link href="/app/chats">
-                <BiHistory className="text-3xl cursor-pointer" />
+                <History className="text-3xl cursor-pointer h-8 w-8" />
             </Link>
             <Link href="/app/favourites">
-                <LuHeart className="text-3xl cursor-pointer" />
+                <Heart className="text-3xl cursor-pointer h-8 w-8" />
             </Link>
             <Link href="/app/settings">
-                <IoSettingsOutline className="text-3xl cursor-pointer" />
+                <Settings className="text-3xl cursor-pointer h-8 w-8" />
             </Link>
         </div>
     );

@@ -198,10 +198,13 @@ export default function Page() {
                         // <SearchingSpinner />
                         messages.map((user) => {
                             const date = new Date(user.createdAt);
-                            const formattedTime = date.toLocaleTimeString([], {
+                            const formattedTime = date.toLocaleString("en-IN", {
                                 hour: "2-digit",
                                 minute: "2-digit",
                                 hour12: true,
+                                day: "2-digit", // Add day
+                                month: "2-digit", // Add month
+                                year: "numeric", // Add year
                             });
 
                             return (

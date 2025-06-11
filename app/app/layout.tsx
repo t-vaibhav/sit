@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Sidebar from "@/components/Sidebar";
-import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 
 function LoadingSpinner() {
@@ -25,6 +24,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         const checkAuth = async () => {
             const authCookie = Cookies.get("is_auth");
+            const rToken = Cookies.get("refreshToken");
+
+            if (!rToken) {
+                timeoutId = setTimeout(() => {
+                    toast.error("A error has occured, login again");
+                }, 500); // 500ms delay for the toast
+                router.push("/auth/login");
+                return;
+            }
             const authenticated = authCookie === "true";
 
             if (!authenticated) {
@@ -52,7 +60,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen flex">
             <Sidebar />
             <div className="flex-1">{children}</div>
-            <Toaster />
         </div>
     );
 }

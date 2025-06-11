@@ -5,7 +5,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"; // Import useRouter for navigation
-import PastelButton from "@/components/PastelButton";
+// import PastelButton from "@/components/PastelButton";
+import { XCircle } from "lucide-react";
 
 // Define the User interface based on your Mongoose schema
 interface User {
@@ -113,30 +114,37 @@ export default function Page() {
 
     // const userName = userData?.user?.name || "User";
     // const userPhone = userData?.user?.phone || "";
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-screen text-2xl font-semibold">
-                Loading user data...
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen text-red-500 text-xl p-4 text-center">
-                <p>Error: {error}</p>
-                <PastelButton
-                    message="Retry"
+    const LoadingSpinner = () => (
+        <div className="flex flex-col items-center justify-center h-full">
+            <div className="loader" />
+            <p className="mt-4 text-lg text-black">Loading user data...</p>
+        </div>
+    );
+    const ErrorDisplay = ({ message }: { message: string }) => (
+        <div className="h-full w-full flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center  text-red-700">
+                <XCircle className="h-8 w-8 text-red-500" />
+                <p className="mt-4 text-xl font-semibold">Error:</p>
+                <p className="text-center px-4 text-lg">{message}</p>
+                <button
                     onClick={() => {
                         setLoading(true);
                         setError(null);
                         fetchData();
                     }}
-                    className="mt-4"
-                />
+                    className="mt-6 px-4 py-2 bg-red-500 text-white  cursor-pointer hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 "
+                >
+                    Retry
+                </button>
             </div>
-        );
+        </div>
+    );
+    if (loading) {
+        return <LoadingSpinner />;
+    }
+
+    if (error) {
+        return <ErrorDisplay message={error} />;
     }
     const handleLogout = async () => {
         // Make the function asynchronous

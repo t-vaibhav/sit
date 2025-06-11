@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -119,7 +120,20 @@ export default function VerifyEmailPage() {
 
     return (
         <div className="p-10 flex items-center justify-center">
-            <div className="w-[30vw] bg-[#CCFFE6] p-10 h-full border-2 border-black shadow-2xl">
+            <motion.div
+                initial={{
+                    transform: "translateY(300px)",
+                    opacity: 0,
+                    scale: 0,
+                }}
+                animate={{
+                    transform: "translateY(0px)",
+                    opacity: 1,
+                    scale: 1,
+                }}
+                transition={{ type: "spring" }}
+                className="w-[30vw] bg-[#CCFFE6] p-10 h-full border-2 border-black shadow-2xl"
+            >
                 <Heading
                     message="Verify your email"
                     className="text-4xl font-extrabold text-center py-5"
@@ -230,7 +244,7 @@ export default function VerifyEmailPage() {
                         </p>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }
