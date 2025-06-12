@@ -93,7 +93,7 @@ export default function Home() {
         <div>
             <div className="px-16">
                 {/* hero section */}
-                <div className="p-6">
+                <div className="p-6 min-h-screen flex flex-col items-center justify-center">
                     <Navbar />
                     <div
                         className={` ${manrope.variable} bg-[#FFFFCC] heading text-5xl  grid grid-cols-2 gap-10`}
@@ -278,11 +278,21 @@ export default function Home() {
                     </div>
                 </motion.div>
             </div>
-            <div className="h-8 mt-32 bg-[#F] border-t-2 border-t-black flex justify-between items-center px-16">
+            <div className="h-8 mt-32  border-t-2 border-t-black flex justify-between items-center px-16 bg-[#CCCCFF]">
                 <div>Designed and Developed by Vaibhav tiwari</div>
                 <div className="flex space-x-5">
-                    <BsLinkedin />
-                    <BsTwitterX />
+                    <Link
+                        href={
+                            "https://www.linkedin.com/in/vaibhav-tiwari-91880325a/"
+                        }
+                        target="_blank"
+                    >
+                        <BsLinkedin />
+                    </Link>
+
+                    <Link href={"https://x.com/Paipup"} target="_blank">
+                        <BsTwitterX />
+                    </Link>
                 </div>
             </div>{" "}
         </div>

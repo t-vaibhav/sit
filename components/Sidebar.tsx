@@ -17,7 +17,7 @@ export default function Sidebar() {
             <Link href="/app/send">
                 <SendHorizonal className="text-3xl cursor-pointer h-8 w-8" />
             </Link>
-            <Link href="/app/chats">
+            <Link href="/app/messages">
                 <History className="text-3xl cursor-pointer h-8 w-8" />
             </Link>
             <Link href="/app/favourites">

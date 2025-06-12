@@ -46,7 +46,7 @@ export default function RootLayout({
                         classNames: {
                             // Apply these classes to the main toast element
                             toast: "toast-class rounded-none border-2 border-black bg-white text-gray-900 shadow-lg", // <-- Modified here
-                            title: "text-lg font-semibold text-blue-600",
+                            title: "text-sm font-semibold text-blue-600",
                             description: "text-sm text-gray-600",
                             actionButton:
                                 "bg-blue-500 text-white hover:bg-blue-600",

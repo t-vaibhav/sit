@@ -73,7 +73,7 @@ export default function Page() {
     const LoadingSpinner = () => (
         <div className="flex flex-col items-center justify-center h-full">
             {/* <div className="loader" /> */}
-            <p className="mt-4 text-lg text-black">Loading chats...</p>
+            <p className="mt-4 text-lg text-black">Loading messages...</p>
         </div>
     );
     const SearchingSpinner = () => (
