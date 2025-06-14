@@ -126,7 +126,7 @@ export default function Home() {
                                 <Heading
                                     message="Out tool allows you to send messages to WhatsApp without
                     logging in to your WhatsApp account"
-                                    className="text-xl py-2"
+                                    className=" font-medium text-lg md:text-xl py-2"
                                 />
                                 <div className="grid grid-cols-2 gap-5 py-4">
                                     <div>
