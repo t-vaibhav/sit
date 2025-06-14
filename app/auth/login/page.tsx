@@ -16,6 +16,7 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
+import { Eye, EyeOff } from "lucide-react"; // Import Eye and EyeOff icons from lucide-react
 
 import { toast } from "sonner"; // Import toast from sonner
 import PastelButton from "@/components/PastelButton";
@@ -38,6 +39,8 @@ const formSchema = z.object({
 export default function LoginPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    // --- Add new state for password visibility ---
+    const [showPassword, setShowPassword] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -51,7 +54,6 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            // OPTION 2: Set withCredentials directly on the axios.post call (recommended for this specific use case if not setting globally)
             const loginPromise = axios.post(
                 "/api/user/login", // Your login API endpoint
                 {
@@ -59,7 +61,7 @@ export default function LoginPage() {
                     password: values.password,
                 },
                 {
-                    withCredentials: true, // <--- Add this line here
+                    withCredentials: true,
                 }
             );
 
@@ -67,10 +69,6 @@ export default function LoginPage() {
                 loading: "Logging in...",
                 success: (response) => {
                     console.log("Login successful:", response.data);
-                    // If your backend sets a cookie (e.g., JWT in an HttpOnly cookie),
-                    // the browser will automatically handle it due to `withCredentials: true`.
-                    // You typically don't access the cookie directly on the frontend.
-                    // You might get user details from response.data if your API returns them.
 
                     setTimeout(() => {
                         router.push("/app/home"); // Redirect to dashboard or home page after login
@@ -81,10 +79,9 @@ export default function LoginPage() {
                 },
                 error: (err) => {
                     console.error("Login failed:", err);
-                    // Check if err.response exists before accessing its properties
                     return (
                         err.response?.data?.message ||
-                        "Login failed. Please check your credentials."
+                        "Login failed. Please try again"
                     );
                 },
             });
@@ -96,9 +93,14 @@ export default function LoginPage() {
         }
     }
 
+    // --- New function to toggle password visibility ---
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
+
     return (
-        <div className="p-10 flex items-center min-h-screen overflow-hidden">
-            <div className="flex justify-around gap-10 w-full">
+        <div className="sm:p-8 p-5 md:p-10 flex items-center min-h-screen overflow-hidden">
+            <div className="flex justify-center md:justify-around lg:gap-8 xl:gap-10 w-full">
                 <motion.div
                     initial={{
                         transform: "translateX(-300px)",
@@ -111,13 +113,13 @@ export default function LoginPage() {
                         scale: 1,
                     }}
                     transition={{ type: "spring" }}
-                    className="w-[30vw] bg-[#CCFFE6] py-20 px-10 h-full border-2 border-black shadow-2xl"
+                    className="lg:w-[40vw] md:w-[60vw] xl:w-[30vw] bg-[#CCFFE6] py-10 sm:py-20 sm:px-10 px-5 h-full border-2 border-black shadow-2xl"
                 >
                     <Heading
                         message="Login"
-                        className="text-4xl font-extrabold text-center pb-3"
+                        className="text-3xl sm:text-4xl font-extrabold text-center pb-3 sm:pb-5"
                     />
-                    <p className="text-lg text-center mb-8">
+                    <p className="text-base sm:text-lg text-center mb-8">
                         Welcome back! Please log in to your account.
                     </p>
                     <div className="pt-3">
@@ -133,7 +135,7 @@ export default function LoginPage() {
                                         <FormItem>
                                             <FormControl>
                                                 <Input
-                                                    className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
+                                                    className=" w-full bg-white   focus:outline-none shadow-none   focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
                                                     placeholder="Email"
                                                     {...field}
                                                 />
@@ -149,12 +151,38 @@ export default function LoginPage() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input
-                                                    type="password"
-                                                    className=" w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                                    placeholder="Password"
-                                                    {...field}
-                                                />
+                                                {/* --- Modified Input for password visibility --- */}
+                                                <div className="relative">
+                                                    <Input
+                                                        type={
+                                                            showPassword
+                                                                ? "text"
+                                                                : "password"
+                                                        }
+                                                        className="w-full bg-white focus:outline-none shadow-none rounded-none  focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 h-10 pr-10" // Add padding to the right for the icon
+                                                        placeholder="Password"
+                                                        {...field}
+                                                    />
+                                                    <button
+                                                        type="button" // Important: set type="button" to prevent form submission
+                                                        onClick={
+                                                            togglePasswordVisibility
+                                                        }
+                                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                                                        aria-label={
+                                                            showPassword
+                                                                ? "Hide password"
+                                                                : "Show password"
+                                                        }
+                                                    >
+                                                        {showPassword ? (
+                                                            <EyeOff className="h-5 w-5 text-black cursor-pointer" />
+                                                        ) : (
+                                                            <Eye className="h-5 w-5 text-black cursor-pointer" />
+                                                        )}
+                                                    </button>
+                                                </div>
+                                                {/* --- End of Modified Input --- */}
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -170,11 +198,10 @@ export default function LoginPage() {
                                 >
                                     {loading ? "Submitting..." : "Submit"}{" "}
                                 </PastelButton>
-                                {/* Added loading text */}
                             </form>
                         </Form>
                         <div className="space-y-5 mt-5">
-                            <div className="text-center space-y-3">
+                            <div className="text-center ">
                                 <p>
                                     Don&apos;t have an account?{" "}
                                     <Link
@@ -182,6 +209,14 @@ export default function LoginPage() {
                                         className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
                                     >
                                         Register
+                                    </Link>
+                                </p>
+                                <p>
+                                    <Link
+                                        href={"/"}
+                                        className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                                    >
+                                        Return to landing page
                                     </Link>
                                 </p>
                             </div>
@@ -207,7 +242,22 @@ export default function LoginPage() {
                         height={500}
                         width={500}
                         alt="login"
+                        className="xl:scale-100 scale-75 lg:scale-90 md:block hidden"
                     />
+                    {/* <Image
+                        src={"/login.png"}
+                        height={400}
+                        width={400}
+                        alt="login"
+                        className="lg:block hidden"
+                    /> */}
+                    {/* <Image
+                        src={"/login.png"}
+                        height={500}
+                        width={500}
+                        alt="login"
+                        className="md:block hidden"
+                    /> */}
                 </motion.div>
             </div>
         </div>

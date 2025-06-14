@@ -177,7 +177,7 @@ export default function Page() {
                             onKeyDown={handleKeyDown}
                             type="text"
                             className="border w-full p-2 pr-10 outline-none border-black bg-white"
-                            placeholder="Search"
+                            placeholder="Search for text messages or number(Please include country code without + for e.g. 910123456789"
                         />
                         <SearchIcon
                             className="absolute right-4 text-gray-600 cursor-pointer"

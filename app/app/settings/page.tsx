@@ -169,12 +169,15 @@ export default function Page() {
     };
 
     return (
-        <div className="p-20 flex  items-center justify-center h-full">
-            <div className="w-full max-w-md bg-[#FFCCE6] p-8  border-2 border-black shadow-md h-full flex flex-col justify-between">
-                <Heading message="Profile Details:" className="text-4xl mb-8" />
+        <div className="py-16 px-5 md:p-20 flex  items-center justify-center h-full">
+            <div className="w-full max-w-md bg-[#FFCCE6] p-5 md:p-8  border-2 border-black shadow-md h-full flex flex-col justify-between">
+                <Heading
+                    message="Profile Details:"
+                    className="text-2xl  lg:text-3xl xl:text-4xl mb-5 lg:mb-8"
+                />
                 <div className="space-y-5 flex flex-col justify-between h-full">
-                    <div className="flex-1 space-y-5">
-                        <div className="text-xl">
+                    <div className="flex-1 space-y-3 md:space-y-5">
+                        <div className="text-lg md:text-xl">
                             Name:{" "}
                             {userData?.user?.name
                                 .toLowerCase()
@@ -186,10 +189,10 @@ export default function Page() {
                                 )
                                 .join(" ")}
                         </div>
-                        <div className="text-xl">
+                        <div className="text-lg md:text-xl">
                             Email: {userData?.user?.email}
                         </div>
-                        <div className="text-xl">
+                        <div className="text-lg md:text-xl">
                             Mob: {userData?.user?.phone}
                         </div>
                     </div>

@@ -22,6 +22,7 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import PastelButton from "@/components/PastelButton";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react"; // Import Eye and EyeOff icons
 
 const formSchema = z
     .object({
@@ -55,6 +56,9 @@ const formSchema = z
 export default function RegisterPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    // --- New states for password visibility ---
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -79,22 +83,13 @@ export default function RegisterPage() {
                 password_confirmation: values.confirmPassword,
             });
 
-            // Use toast.promise directly. The await inside the try block for
-            // registrationPromise is no longer needed after this, as sonner
-            // handles the promise resolution/rejection internally for its states.
             toast.promise(registrationPromise, {
-                // Await the toast.promise call itself
                 loading: "Creating your account...",
                 success: () => {
-                    // 'response' here is the resolved value from axios.post
-                    // Navigate after the toast shows, or immediately after success if you prefer
-
                     router.push("/auth/verify-email");
-
                     return "Registration successful!";
                 },
                 error: (err) => {
-                    // Log the full error to the console for debugging
                     console.error("Registration failed:", err);
                     return (
                         err.response?.data?.message ||
@@ -102,18 +97,7 @@ export default function RegisterPage() {
                     );
                 },
             });
-
-            // No need for a separate await registrationPromise; here because toast.promise
-            // already handles the promise resolution and updates its state.
-            // If you *must* access the resolved data here for further logic,
-            // you'd typically await registrationPromise *before* toast.promise,
-            // or handle it within the success callback.
-            // For now, removing it simplifies the flow with sonner.
         } catch (err) {
-            // This catch block will only execute for errors that occur *before*
-            // the promise is even initiated or if `toast.promise` itself throws
-            // an unexpected synchronous error (very rare).
-            // Axios errors are handled by sonner's error callback.
             console.error(
                 "Unexpected error during registration process setup:",
                 err
@@ -124,9 +108,18 @@ export default function RegisterPage() {
         }
     }
 
+    // --- Functions to toggle password visibility ---
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword((prev) => !prev);
+    };
+
     return (
-        <div className="p-10 flex items-center justify-center min-h-screen overflow-hidden">
-            <div className="flex justify-around items-center gap-10 w-full">
+        <div className="sm:p-8 p-5 md:p-10  flex items-center justify-center min-h-screen overflow-hidden">
+            <div className="flex justify-center md:justify-around items-center lg:gap-8 xl:gap-10 w-full">
                 <motion.div
                     initial={{
                         transform: "translateX(-300px)",
@@ -139,13 +132,13 @@ export default function RegisterPage() {
                         scale: 1,
                     }}
                     transition={{ type: "spring" }}
-                    className="w-[30vw] bg-[#CCFFE6] p-10 h-full border-2 border-black shadow-2xl"
+                    className="lg:w-[40vw] md:w-[60vw] xl:w-[30vw] bg-[#CCFFE6] p-5 sm:p-10 h-full border-2 border-black shadow-2xl"
                 >
                     <Heading
                         message="Register"
-                        className="text-4xl font-extrabold text-center pb-5"
+                        className="text-3xl sm:text-4xl font-extrabold text-center pb-3 sm:pb-5"
                     />
-                    <p className="text-lg text-center mb-8">
+                    <p className="text-base sm:text-lg  text-center mb-8">
                         Enter your details to get started
                     </p>
                     <Form {...form}>
@@ -214,35 +207,85 @@ export default function RegisterPage() {
                                     </FormItem>
                                 )}
                             />
+                            {/* --- Password Field with Show/Hide Toggle --- */}
                             <FormField
                                 control={form.control}
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
-                                                type="password"
-                                                className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                                placeholder="Password"
-                                                {...field}
-                                            />
+                                            <div className="relative">
+                                                <Input
+                                                    type={
+                                                        showPassword
+                                                            ? "text"
+                                                            : "password"
+                                                    }
+                                                    className="w-full bg-white focus:outline-none shadow-none rounded-none  focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 h-10 pr-10"
+                                                    placeholder="Password"
+                                                    {...field}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={
+                                                        togglePasswordVisibility
+                                                    }
+                                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                                                    aria-label={
+                                                        showPassword
+                                                            ? "Hide password"
+                                                            : "Show password"
+                                                    }
+                                                >
+                                                    {showPassword ? (
+                                                        <EyeOff className="h-5 w-5 text-black cursor-pointer" />
+                                                    ) : (
+                                                        <Eye className="h-5 w-5 text-black cursor-pointer" />
+                                                    )}
+                                                </button>
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
+                            {/* --- Confirm Password Field with Show/Hide Toggle --- */}
                             <FormField
                                 control={form.control}
                                 name="confirmPassword"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
-                                                type="password"
-                                                className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
-                                                placeholder="Confirm Password"
-                                                {...field}
-                                            />
+                                            <div className="relative">
+                                                <Input
+                                                    type={
+                                                        showConfirmPassword
+                                                            ? "text"
+                                                            : "password"
+                                                    }
+                                                    className="w-full bg-white focus:outline-none shadow-none rounded-none  focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 h-10 pr-10"
+                                                    placeholder="Confirm Password"
+                                                    {...field}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={
+                                                        toggleConfirmPasswordVisibility
+                                                    }
+                                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700"
+                                                    aria-label={
+                                                        showConfirmPassword
+                                                            ? "Hide confirm password"
+                                                            : "Show confirm password"
+                                                    }
+                                                >
+                                                    {showConfirmPassword ? (
+                                                        <EyeOff className="h-5 w-5 text-black cursor-pointer" />
+                                                    ) : (
+                                                        <Eye className="h-5 w-5 text-black cursor-pointer" />
+                                                    )}
+                                                </button>
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -260,7 +303,7 @@ export default function RegisterPage() {
                         </form>
                     </Form>
                     <div className="space-y-5 mt-5">
-                        <div className="text-center space-y-3">
+                        <div className="text-center ">
                             <p>
                                 Already have an account?{" "}
                                 <Link
@@ -268,6 +311,14 @@ export default function RegisterPage() {
                                     className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
                                 >
                                     Login
+                                </Link>
+                            </p>
+                            <p>
+                                <Link
+                                    href={"/"}
+                                    className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                                >
+                                    Return to landing page
                                 </Link>
                             </p>
                         </div>
@@ -291,6 +342,7 @@ export default function RegisterPage() {
                         height={500}
                         width={500}
                         alt="login"
+                        className="xl:scale-100 scale-75 lg:scale-90 md:block hidden"
                     />
                 </motion.div>
             </div>

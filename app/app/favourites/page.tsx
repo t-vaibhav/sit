@@ -72,15 +72,15 @@ const Favourite = ({ name, number, id, onDelete, onEdit }: any) => {
     }, [editOpen, name, number, editForm]);
 
     return (
-        <div className="flex justify-between gap-5 bg-[#CCFFE6] px-5 p-3 border border-black">
+        <div className="flex justify-between gap-5 bg-[#CCFFE6] px-3 lg:px-5 p-3 border border-black">
             <Link href={`/app/send/?number=${number}`} className="flex-1">
-                <div className="flex-1 flex gap-5">
+                <div className=" flex gap-3 lg:gap-5">
                     <Image
                         src={"/user.png"}
                         height={50}
                         width={50}
                         alt={name}
-                        className="rounded-full border border-black"
+                        className="rounded-full  border border-black"
                     />
                     <div>
                         <h3 className="font-medium text-xl pb-1">{name}</h3>
@@ -375,15 +375,15 @@ export default function Home() {
     }
 
     return (
-        <div className="p-6 text-black h-screen">
+        <div className="lg:p-6 text-black h-screen">
             <div
-                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg pt-5 px-5 gap-10 h-full flex flex-col`}
+                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg pt-10 lg:pt-5 px-5 md:gap-10 h-full flex flex-col`}
             >
                 <Heading
                     message="Your favourites"
-                    className="text-4xl pb-8 space-y-5 "
+                    className="text-3xl lg:text-4xl pb-5 lg:pb-8 space-y-5 "
                 />
-                <div className="space-y-5 flex-1 ">
+                <div className="space-y-5 flex-1 md:pt-0 pt-3">
                     {loading ? (
                         <LoadingSpinner />
                     ) : error ? (

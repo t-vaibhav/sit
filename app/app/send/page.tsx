@@ -185,27 +185,12 @@ export default function PhoneNumberInput() {
 
     // Define the onSubmit function for form submission
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // console.log("Form values:", values);
-        // console.log("here");
-        // console.log("Attached files (Edge Store URLs):", uploadedFiles);
-
-        // Prepare data to send to your MENN backend
-        // const payload = {
-        //     number: values.phoneNumber.substring(1),
-        //     message: values.message,
-        //     files: uploadedFiles.map((file) => ({
-        //         url: file.url,
-        //         filename: file.name,
-        //     })),
-        // };
         const files = uploadedFiles.map((file) => ({
             url: file.url,
             filename: file.name,
         }));
-        // console.log("Payload to send to backend:", payload);
 
         try {
-            // Send this data to your Next.js API route
             const messagePromise = axios.post(
                 "/api/send", // Your message sending API endpoint
                 {
@@ -214,27 +199,31 @@ export default function PhoneNumberInput() {
                     files: files, // Send the payload with phone number, message, and files
                 },
                 {
-                    withCredentials: true, // <--- Add this line here
+                    withCredentials: true,
                 }
             );
 
             toast.promise(messagePromise, {
-                loading: "Sending message...", // Changed from "Logging in..."
+                loading: "Sending message...",
                 success: (response) => {
-                    console.log("Message sent successfully:", response.data); // Changed from "Login successful:"
-                    // If your backend sets a cookie (e.g., JWT in an HttpOnly cookie),
-                    // the browser will automatically handle it due to `withCredentials: true`.
-                    // You typically don't access the cookie directly on the frontend.
-                    // You might get user details from response.data if your API returns them.
+                    console.log("Message sent successfully:", response.data);
 
-                    return "Message sent successfully!"; // Changed from "Login successful!"
+                    // --- Add these lines to clear form values and files ---
+                    // Assuming `form` is the object returned by `useForm` (e.g., const { form, reset } = useForm();)
+                    // You'll need to pass `form` or `reset` as a prop or have it accessible in this scope.
+                    form.reset({
+                        message: "", // Reset message to empty
+                    });
+                    setUploadedFiles([]); // Clear the uploaded files state
+                    // --- End of added lines ---
+
+                    return "Message sent successfully!";
                 },
                 error: (err) => {
-                    console.error("Failed to send message:", err); // Changed from "Login failed:"
-                    // Check if err.response exists before accessing its properties
+                    console.error("Failed to send message:", err);
                     return (
                         err.response?.data?.message ||
-                        "Failed to send message. Please try again." // Changed message
+                        "Failed to send message. Please try again."
                     );
                 },
             });
@@ -264,8 +253,8 @@ export default function PhoneNumberInput() {
         }
     };
     return (
-        <div className="py-20 px-32 overflow-hidden">
-            <div className="grid grid-cols-4 ">
+        <div className="px-5 py-10 md:px-10 md:py-16 lg:py-16 lg:px-16 xl:py-20 xl:px-32 overflow-hidden">
+            <div className="grid grid-cols-4 gap-5">
                 <motion.div
                     initial={{
                         transform: "translateX(-300px)",
@@ -278,16 +267,16 @@ export default function PhoneNumberInput() {
                         scale: 1,
                     }}
                     transition={{ type: "tween" }}
-                    className="col-span-2 w-full"
+                    className="col-span-4 md:col-span-2 w-full"
                 >
                     <Heading
                         message="Enter details"
-                        className="text-4xl pb-8"
+                        className="text-2xl font-bold md:text-4xl pb-8"
                     />
                     <Form {...form}>
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-5"
+                            className="space-y-2 md:space-y-5"
                         >
                             {/* Phone Number Input */}
                             <FormField
@@ -295,7 +284,7 @@ export default function PhoneNumberInput() {
                                 name="phoneNumber"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-xl body">
+                                        <FormLabel className="text-lg md:text-xl body">
                                             Phone number:
                                         </FormLabel>
                                         <FormControl>
@@ -329,13 +318,13 @@ export default function PhoneNumberInput() {
                                 name="message"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-xl body mt-5">
+                                        <FormLabel className="text-lg md:text-xl body mt-5">
                                             Enter message:
                                         </FormLabel>
                                         <FormControl>
                                             <textarea // Use Shadcn's Textarea
                                                 placeholder="Enter your message here"
-                                                className="w-full h-48 rounded-xs border mt-2 outline-none p-3 bg-white"
+                                                className="w-full h-56 md:h-48 rounded-xs border md:mt-2 outline-none p-3 bg-white"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -459,14 +448,14 @@ export default function PhoneNumberInput() {
                         scale: 1,
                     }}
                     transition={{ type: "tween" }}
-                    className="col-span-2 flex justify-center h-full w-full"
+                    className="md:flex hidden md:col-span-2 flex justify-center h-full w-full"
                 >
                     <Image
                         src={"/messaging.png"}
                         height={500}
                         width={500}
                         alt="illustrate"
-                        className="object-cover"
+                        className="object-cover "
                     />
                 </motion.div>
             </div>

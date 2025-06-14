@@ -91,12 +91,12 @@ export default function Home() {
     }
     return (
         <div>
-            <div className="px-16">
+            <div className="2xl:px-16 xl:px-12 lg:px-5  pt-8">
                 {/* hero section */}
-                <div className="p-6 min-h-screen flex flex-col items-center justify-center">
+                <div className=" px-5 lg:px-0 h-screen flex flex-col items-center md:justify-start">
                     <Navbar />
                     <div
-                        className={` ${manrope.variable} bg-[#FFFFCC] heading text-5xl  grid grid-cols-2 gap-10`}
+                        className={` ${manrope.variable} pt-10 md:pt-0 bg-[#FFFFCC] heading text-5xl  flex flex-col-reverse md:grid  lg:grid-cols-2 md:grid-cols-5 md:gap-10`}
                     >
                         <motion.div
                             initial={{
@@ -112,46 +112,47 @@ export default function Home() {
                                 delay: 0.2,
                                 type: "string",
                             }}
+                            className="lg:col-span-1 col-span-3"
                         >
-                            <div className="py-20 px-10">
+                            <div className="pt md:py-20 px-0 lg:px-10">
                                 <Heading
-                                    message="Connect"
+                                    message="Welcome!"
                                     className="text-lg py-2"
                                 />
                                 <Heading
                                     message="Effortlessly send messages to WhatsApp"
-                                    className=" font-semibold heading text-5xl py-6 "
+                                    className=" font-semibold heading text-3xl lg:text-4xl xl:text-5xl md:py-6 py-3 "
                                 />
                                 <Heading
                                     message="Out tool allows you to send messages to WhatsApp without
-                        logging in to your WhatsApp account"
-                                    className="text-lg py-2"
+                    logging in to your WhatsApp account"
+                                    className="text-xl py-2"
                                 />
                                 <div className="grid grid-cols-2 gap-5 py-4">
                                     <div>
-                                        <h3 className="font-medium text-2xl pb-1">
-                                            Quick Sharing
+                                        <h3 className="font-medium text-lg md:text-2xl pb-1">
+                                            Quick sharing
                                         </h3>
                                         <h6
-                                            className={`font-normal text-base       `}
+                                            className={`font-normal text-base      `}
                                         >
                                             Just enter the number and message
                                             and click send
                                         </h6>
                                     </div>
                                     <div>
-                                        <h3 className="font-medium text-2xl pb-1">
-                                            No Number reuired
+                                        <h3 className="font-medium text-lg md:text-2xl pb-1">
+                                            No number required
                                         </h3>
                                         <h6
-                                            className={`font-normal text-base       `}
+                                            className={`font-normal text-base      `}
                                         >
-                                            Just login with you email and start
+                                            Just login with your email and start
                                             sending
                                         </h6>
                                     </div>
                                 </div>
-                                <div className="pt-6 text-xl">
+                                <div className="pt-10 lg:pt-6 text-xl">
                                     <Link href={"/auth/register"}>
                                         <PastelButton
                                             message="Start sending"
@@ -175,41 +176,34 @@ export default function Home() {
                                 delay: 0.2,
                                 type: "string",
                             }}
-                            // initial={{ y: 100, opacity: 0, scale: 0.5 }}
-                            // whileInView={{ y: 0, opacity: 1, scale: 1 }}
-                            // transition={{ duration: 0.4, delay: 0.2 }}
-                            // whileInView={{ opacity: 1, scale: 1 }}
-                            // viewport={}
-
-                            // animate = {
-                            // }
-                            className="flex  h-full w-full justify-center duration00"
+                            className="flex lg:col-span-1 col-span-2 h-full w-full justify-center "
                         >
-                            {/* <div className="h-full w-full"> */}
                             <Image
                                 src={"/cover.png"}
                                 height={600}
                                 width={600}
                                 alt="cover"
-                                className=" object-contain"
+                                className="md:block hidden object-cover"
                                 style={{ objectFit: "contain" }}
                             />
-                            {/* </div> */}
                         </motion.div>
                     </div>
                 </div>
 
-                <div className="px-10">
+                <div className="px-5 md:px-10">
                     <Heading
                         message="How It Works - A Simple Fix to a Big Problem "
-                        className="text-4xl text-start pt-10"
+                        className="text-3xl md:text-4xl text-start pt-10 sm:mb-0 mb-10"
                     />
                     <ScrollTriggered />
                 </div>
 
-                <div className="px-10 pb-10">
-                    <Heading message="Features" className="text-4xl pb-20" />
-                    <div className="grid grid-cols-2 gap-16 h-full">
+                <div className="px-5 md:px-10sm:pt-0 pt-10 pb-10">
+                    <Heading
+                        message="Features"
+                        className="text-3xl md:text-4xl pb-10 md:pb-10 lg:pb-20"
+                    />
+                    <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 h-full">
                         {features.map((feature, index) => (
                             <FeatureCards key={index} {...feature} />
                         ))}
@@ -217,22 +211,22 @@ export default function Home() {
                 </div>
                 {/* steps */}
 
-                <div className="px-10  ">
+                <div className="px-5 md:px-10  ">
                     <Heading
-                        message="Start in simple steps:"
-                        className="text-4xl font-extrabold pt-16"
+                        message="Start in simple steps"
+                        className="text-3xl md:text-4xl font-extrabold pt-16"
                     />
                     <Steps />
                 </div>
 
                 {/* demo video */}
-                <div className="px-10">
+                <div className="px-5 md:px-10">
                     <Heading
-                        message="Demo Video: "
-                        className="text-4xl py-10   "
+                        message="Demo Video"
+                        className="text-3xl md:text-4xl py-10   "
                     />
-                    <div className="p-10 flex justify-center">
-                        <div className="h-[80vh] w-[80vw] border-[10px] rounded-lg border-[#A6F31A]">
+                    <div className="md:p-10 flex justify-center">
+                        <div className=" w-[100vw] h-[40vh] sm:h-[60vh] md:h-[80vh] md:w-[80vw] border-4  md:border-[10px] rounded-lg border-[#CCCCFF]">
                             <iframe
                                 width="100%"
                                 height="100%"
@@ -261,10 +255,10 @@ export default function Home() {
                         duration: 0.3,
                     }}
                 >
-                    <div className="mx-10  p-10 bg-[#FFCCE6] border-2 border-black mb-10 mt-24 flex justify-center items-center ">
+                    <div className="mx-5 md:mx-10 p-3 md:p-10 bg-[#FFCCE6] border-2 border-black mb-10 mt-24 flex justify-center items-center ">
                         <Heading
                             message="So what are you waiting for??"
-                            className="text-5xl "
+                            className="text-2xl text-center md:text-3xl   lg:text-4xl xl:text-5xl "
                         />
                     </div>
 
@@ -278,7 +272,7 @@ export default function Home() {
                     </div>
                 </motion.div>
             </div>
-            <div className="h-8 mt-32  border-t-2 border-t-black flex justify-between items-center px-16 bg-[#CCCCFF]">
+            <div className="h-8 mt-32  border-t-2 border-t-black flex justify-between items-center md:px-16 px-5 bg-[#CCCCFF] text-xs sm:text-sm md:text-lg">
                 <div>Designed and Developed by Vaibhav tiwari</div>
                 <div className="flex space-x-5">
                     <Link

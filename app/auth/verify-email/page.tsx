@@ -119,7 +119,7 @@ export default function VerifyEmailPage() {
     }
 
     return (
-        <div className="p-10 flex items-center justify-center">
+        <div className="sm:p-8 p-5 md:p-10  flex items-center justify-center min-h-screen">
             <motion.div
                 initial={{
                     transform: "translateY(300px)",
@@ -132,11 +132,11 @@ export default function VerifyEmailPage() {
                     scale: 1,
                 }}
                 transition={{ type: "spring" }}
-                className="w-[30vw] bg-[#CCFFE6] p-10 h-full border-2 border-black shadow-2xl"
+                className="lg:w-[40vw] md:w-[60vw] xl:w-[30vw] bg-[#CCFFE6] p-5 sm:p-10 h-full border-2 border-black shadow-2xl py-10"
             >
                 <Heading
                     message="Verify your email"
-                    className="text-4xl font-extrabold text-center py-5"
+                    className="text-3xl sm:text-4xl font-extrabold text-center pb-3 sm:pb-5"
                 />
                 <p className="text-lg text-center mb-8">
                     {sendingOTP
@@ -159,7 +159,7 @@ export default function VerifyEmailPage() {
                                 <FormItem>
                                     <FormControl>
                                         <Input
-                                            className="w-full bg-white focus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none"
+                                            className="w-full bg-white   focus:outline-none shadow-none  rounded-nonefocus:outline-none focus:shadow-none focus-visible:ring-[0px] focus-visible:border-black border-2 border-black p-2 rounded-none h-10"
                                             placeholder="Enter your email"
                                             {...field}
                                             disabled={sendingOTP} // Disable email input after OTP is sent
@@ -232,7 +232,7 @@ export default function VerifyEmailPage() {
                     </form>
                 </Form>
                 <div className="space-y-5 mt-5">
-                    <div className="text-center space-y-3">
+                    <div className="text-center ">
                         <p>
                             Already Verified?{" "}
                             <Link
@@ -240,6 +240,14 @@ export default function VerifyEmailPage() {
                                 className="hover:underline cursor-pointer"
                             >
                                 Login
+                            </Link>
+                        </p>
+                        <p>
+                            <Link
+                                href={"/"}
+                                className="hover:underline cursor-pointer hover:font-bold duration-200 ease-in-out"
+                            >
+                                Return to landing page
                             </Link>
                         </p>
                     </div>

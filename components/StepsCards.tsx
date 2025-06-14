@@ -17,7 +17,7 @@ export default function StepsCards({
 }: StepCardTypes) {
     return (
         <div
-            className="p-10 bg-[#CCFFE6] h-[60vh] border-2 border-black flex flex-col justify-between
+            className="p-5 md:p-10 h-[60vh] bg-[#CCFFE6] lg:h-[70vh] xl:h-[60vh] border-2 border-black flex flex-col justify-between
     "
         >
             <Image
@@ -31,13 +31,13 @@ export default function StepsCards({
             <div>
                 <Heading
                     message={`Step-${step} : `}
-                    className="text-start text-lg "
+                    className="text-start text-base md:text-lg "
                 />
                 <Heading
                     message={heading}
-                    className="text-start text-2xl mt-"
+                    className="text-start text-xl md:text-2xl mt-"
                 />
-                <p className="pt-5 text-lg">{content}</p>
+                <p className="pt-5 text-base md:text-lg">{content}</p>
             </div>
         </div>
     );

@@ -137,7 +137,7 @@ export default function Home() {
     }
 
     return (
-        <div className="p-6">
+        <div className="p-6 xl:px-10">
             <motion.div
                 initial={{
                     transform: "translateY(-300px)",
@@ -150,9 +150,10 @@ export default function Home() {
                     scale: 1,
                 }}
                 transition={{ type: "keyframes" }}
-                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg  grid grid-cols-2 gap-10`}
+                className={` ${manrope.variable} bg-[#FFFFCC] heading text-lg h-full
+                 grid md:grid-cols-2 md:gap-10 gap-2`}
             >
-                <div className="py-20 px-10">
+                <div className="xl:py-20 md:py-10 lg:py-16 h-full ">
                     <Heading
                         message={`Hey! ${userName
                             .toLowerCase()
@@ -162,18 +163,22 @@ export default function Home() {
                                     word.charAt(0).toUpperCase() + word.slice(1)
                             )
                             .join(" ")}`}
-                        className="text-lg py-2"
+                        className="text-base xl:text-lg md:py-2 py-0"
                     />
                     <Heading
                         message="Start sending now"
-                        className=" font-semibold heading text-5xl py-4 "
+                        className=" font-semibold heading text-2xl md:text-3xl  lg:text-4xl xl:text-5xl py-2 xl:py-4 "
                     />
                 </div>
-                <div className="flex items-center h-full justify-center">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel
-                    sit cumque, possimus nisi facilis consequatur laudantium
-                    accusantium sapiente molestiae corporis, aperiam voluptatum
-                    inventore tenetur ex qui
+                <div className="flex items-center h-full justify-center xl:text-lg text-base">
+                    <div>
+                        <div className="md:pb-2">No phone? No problem.</div>
+                        <div>
+                            Send WhatsApp messages and documents straight from
+                            your browser — no QR code, no login, no hassle.
+                            Secure. Instant. Just your number and message.
+                        </div>
+                    </div>
                 </div>
             </motion.div>
             <motion.div
@@ -189,7 +194,7 @@ export default function Home() {
                 }}
                 transition={{ type: "keyframes" }}
             >
-                <div className=" h-full grid grid-cols-3 gap-10 px-5">
+                <div className=" h-full grid md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-10 py-10 lg:pt-10 xl:pt-0">
                     <CTACards
                         src="/user.png"
                         title="To yourself"
@@ -204,12 +209,12 @@ export default function Home() {
                     />
                     <CTACards
                         src="/favourite.png"
-                        title="To your favourites"
+                        title="To favourites"
                         content="Start sending to your favourite contacts"
                         link="/app/favourites"
                     />
                 </div>
-                <div className="px-5 pt-20 ">
+                <div className="md:pt-16  lg:pt-20 ">
                     <PastelButton message="Check History" />
                 </div>
             </motion.div>
