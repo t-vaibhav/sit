@@ -91,12 +91,12 @@ export default function Home() {
     }
     return (
         <div>
-            <div className="2xl:px-16 xl:px-12 lg:px-5  pt-8">
+            <div className="2xl:px-16 xl:px-12 lg:px-5  sm:pt-5 pt-8">
                 {/* hero section */}
-                <div className=" px-5 lg:px-0 h-screen flex flex-col items-center md:justify-start">
+                <div className=" px-5 lg:px-0 md:min-h-screen flex flex-col items-center md:justify-start">
                     <Navbar />
                     <div
-                        className={` ${manrope.variable} pt-10 md:pt-0 bg-[#FFFFCC] heading text-5xl  flex flex-col-reverse md:grid  lg:grid-cols-2 md:grid-cols-5 md:gap-10`}
+                        className={` ${manrope.variable}  sm:pt-0 md:pt-0 bg-[#FFFFCC] heading text-5xl  flex flex-col-reverse md:grid  lg:grid-cols-2 md:grid-cols-5 md:gap-10`}
                     >
                         <motion.div
                             initial={{
@@ -114,7 +114,7 @@ export default function Home() {
                             }}
                             className="lg:col-span-1 col-span-3"
                         >
-                            <div className="pt md:py-20 px-0 lg:px-10">
+                            <div className=" pt-5 lg:pt-10 xl:pt-20 px-0 lg:px-10">
                                 <Heading
                                     message="Welcome!"
                                     className="text-lg py-2"
@@ -123,11 +123,16 @@ export default function Home() {
                                     message="Effortlessly send messages to WhatsApp"
                                     className=" font-semibold heading text-3xl lg:text-4xl xl:text-5xl md:py-6 py-3 "
                                 />
-                                <Heading
-                                    message="Out tool allows you to send messages to WhatsApp without
-                    logging in to your WhatsApp account"
-                                    className=" font-medium text-lg md:text-xl py-2"
-                                />
+                                {/* <Heading
+                                    message=""
+                                    className="font- text-lg md:text-xl py-2"
+                                    className="font- text-lg md:text-xl py-2"
+                                /> */}
+                                <h3 className="font- text-lg md:text-xl py-2">
+                                    Out tool allows you to send messages to
+                                    WhatsApp without logging in to your WhatsApp
+                                    account
+                                </h3>
                                 <div className="grid grid-cols-2 gap-5 py-4">
                                     <div>
                                         <h3 className="font-medium text-lg md:text-2xl pb-1">
@@ -183,7 +188,15 @@ export default function Home() {
                                 height={600}
                                 width={600}
                                 alt="cover"
-                                className="md:block hidden object-cover"
+                                className="xl:block hidden object-cover"
+                                style={{ objectFit: "contain" }}
+                            />
+                            <Image
+                                src={"/cover.png"}
+                                height={400}
+                                width={400}
+                                alt="cover"
+                                className="md:block xl:hidden hidden object-cover"
                                 style={{ objectFit: "contain" }}
                             />
                         </motion.div>
@@ -193,7 +206,7 @@ export default function Home() {
                 <div className="px-5 md:px-10">
                     <Heading
                         message="How It Works - A Simple Fix to a Big Problem "
-                        className="text-3xl md:text-4xl text-start pt-10 sm:mb-0 mb-10"
+                        className="text-3xl md:text-4xl text-start pt-10 sm:mb-5 mb-10"
                     />
                     <ScrollTriggered />
                 </div>
@@ -203,7 +216,7 @@ export default function Home() {
                         message="Features"
                         className="text-3xl md:text-4xl pb-10 md:pb-10 lg:pb-20"
                     />
-                    <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 h-full">
+                    <div className="grid md:grid-cols-2 gap-10 lg:gap-16 h-full">
                         {features.map((feature, index) => (
                             <FeatureCards key={index} {...feature} />
                         ))}

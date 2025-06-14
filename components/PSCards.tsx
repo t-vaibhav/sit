@@ -110,6 +110,7 @@ const PSCards: React.FC<PSCardsProps> = ({
                                 alt={heading}
                                 height={150}
                                 width={150}
+                                className="md:hidden"
                             />
                         </motion.div>
                     </div>
