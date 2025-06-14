@@ -17,7 +17,7 @@ export default function StepsCards({
 }: StepCardTypes) {
     return (
         <div
-            className="p-5 md:p-10 h-[70vh]  bg-[#CCFFE6] md:h-[80vh] xl:h-[60vh] border-2 border-black flex flex-col justify-between
+            className="p-5 md:p-10 h-[80vh]  bg-[#CCFFE6]  xl:h-[70vh] border-2 border-black flex flex-col justify-between
     "
         >
             <Image
