@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Navbar() {
     return (
-        <div className="flex justify-between items-start w-full  ">
+        <div className="flex justify-between items-start w-full  xl:pt-5 pt-0">
             <Image src={"/sit.png"} height={40} width={120} alt="cover" />
             <Link href={"/auth/login"}>
                 <PastelButton message="Login" />

@@ -96,7 +96,7 @@ export default function Home() {
                 <div className=" px-5 lg:px-0 md:min-h-screen flex flex-col items-center md:justify-start">
                     <Navbar />
                     <div
-                        className={` ${manrope.variable}  sm:pt-0 md:pt-0 bg-[#FFFFCC] heading text-5xl  flex flex-col-reverse md:grid  lg:grid-cols-2 md:grid-cols-5 md:gap-10`}
+                        className={` ${manrope.variable}  sm:pt-0 md:pt-0 xl:pt-3 bg-[#FFFFCC] heading text-5xl  flex flex-col-reverse md:grid  lg:grid-cols-2 md:grid-cols-5 md:gap-10`}
                     >
                         <motion.div
                             initial={{
@@ -239,11 +239,11 @@ export default function Home() {
                         className="text-3xl md:text-4xl py-10   "
                     />
                     <div className="md:p-10 flex justify-center">
-                        <div className=" w-[100vw] h-[40vh] sm:h-[60vh] md:h-[80vh] md:w-[80vw] border-4  md:border-[10px] rounded-lg border-[#CCCCFF]">
+                        <div className=" w-[100vw] h-[40vh] sm:h-[60vh] md:h-[80vh] md:w-[80vw] border-4  md:border-[10px] rounded-lg border-black">
                             <iframe
                                 width="100%"
                                 height="100%"
-                                src="https://www.youtube.com/embed/-oOoTIuoL8M?rel=0&modestbranding=1&controls=1&autohide=1"
+                                src="https://www.youtube.com/embed/iC8M7YQi5zQ?si=kaOzNr3pl1D5Yx8-"
                                 title="YouTube video player"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
