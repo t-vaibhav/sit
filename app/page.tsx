@@ -129,7 +129,7 @@ export default function Home() {
                                     className="font- text-lg md:text-xl py-2"
                                 /> */}
                                 <h3 className="font- text-lg md:text-xl py-2">
-                                    Out tool allows you to send messages to
+                                    Our tool allows you to send messages to
                                     WhatsApp without logging in to your WhatsApp
                                     account
                                 </h3>
